@@ -354,7 +354,7 @@
 
     // ===== Viewer gate (front-door login) =====
     // Leave h empty to see the "create login" screen. It prints the line to paste here.
-    var GATE={s:"gate-v1",u:"",h:""};
+    var GATE={s:"gate-v1",u:"reily",h:"f9bfe0e5c6cd4c9f386bebce208e390ad15318c78765784fc705dbdf2af8cb50"};
     (function(){var g=document.getElementById("gate");
         function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio_gate","1")}catch(e){}}
         try{if(GATE.h&&sessionStorage.getItem("folio_gate")==="1"){open();return}}catch(e){}
