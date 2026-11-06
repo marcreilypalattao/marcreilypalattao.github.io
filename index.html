@@ -204,7 +204,6 @@
         <div id="vPanel" class="hidden"><h3>Add to gallery</h3><p>Choose photos or videos from your device. They appear in the gallery right away.</p>
             <label for="af">Files</label><input id="af" type="file" accept="image/*,video/*" multiple>
             <label for="at">Title</label><input id="at" placeholder="Leave blank to use the file name">
-            <label for="ac">Category</label><select id="ac"><option>Photography</option><option>Singing</option><option>Dancing</option><option>Arts</option></select>
             <label for="ad">Date or note</label><input id="ad" placeholder="e.g. November 2026">
             <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div></div>
         <div class="msg" id="msg" role="status"></div>
@@ -219,11 +218,11 @@
         P(9,"Emilia Asiana Doesnt","Photography","October 2025"),P(10,"Franzcheska Cesas","Photography","February 2026"),P(11,"Gel Jimenez","Photography","December 2025"),P(12,"Sheena Andrada","Photography","March 2025"),
         P(13,"Sheena Andrada","Photography","May 2025"),P(14,"Marco Aurelio Avile Leon","Photography","March 2026"),P(15,"Kenard Marquez","Photography","February 2026"),P(16,"Photo","Photography","February 2026"),
         P(17,"Sofia Trazona","Photography","May 2026"),P(18,"Photo","Photography","February 2026"),P(19,"Loue Slao","Photography","September 2025"),P(20,"Sidney Flores","Photography","June 2025"),
-        P(28,"Beauty Makeup","Arts",""),P(30,"Fruit Carving","Arts",""),P(21,"Scribble Art","Arts",""),P(22,"Costume Making","Arts",""),P(23,"Special Effect Makeup","Arts",""),P(31,"Special Effect Makeup","Arts",""),
-        P(24,"Still Life Drawing","Arts",""),P(25,"Realistic Portrait","Arts",""),P(26,"Tattoo","Arts",""),P(29,"Tattoo","Arts",""),P(27,"Painting","Arts",""),P(32,"Granger Sketch","Arts",""),
-        P(34,"Poster Making","Arts",""),P(35,"Painting","Arts",""),P(36,"Painting","Arts",""),
-        V("bts1","BTS Anton Vinzon","Photography","February 2026"),V("bts2","BTS Marco Masa","Photography","December 2025"),V("bts3","BTS Ashley Sarmiento","Photography","May 2026"),
-        V("singing2","Passenger Seat Cover","Singing","September 2026"),V("dancing1","Stickwitu Dance Choreo","Dancing","July 2026"),V("dancing2","Dance Choreo","Dancing","September 2026"),V("dancing3","Rich Man Dance Choreo","Dancing","June 2026")
+
+
+
+        V("bts1","BTS Anton Vinzon","Videos","February 2026"),V("bts2","BTS Marco Masa","Videos","December 2025"),V("bts3","BTS Ashley Sarmiento","Videos","May 2026"),
+        V("singing2","Passenger Seat Cover","Videos","September 2026"),V("dancing1","Stickwitu Dance Choreo","Videos","July 2026"),V("dancing2","Dance Choreo","Videos","September 2026"),V("dancing3","Rich Man Dance Choreo","Videos","June 2026")
     ];
     function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
     function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -244,8 +243,8 @@
     function dbDel(id){return new Promise(function(res){var t=DB.transaction("items","readwrite");t.objectStore("items").delete(id);t.oncomplete=res})}
 
     // ===== Gallery =====
-    var ITEMS=[],grid=document.getElementById("grid"),flt=document.getElementById("flt"),curCat="All";
-    ["All","Photography","Singing","Dancing","Arts"].forEach(function(c,i){var b=el("button","",c);b.type="button";b.className=i?"":"on";b.setAttribute("aria-pressed",i?"false":"true");
+    var ITEMS=[],grid=document.getElementById("grid"),flt=document.getElementById("flt"),curCat="Photography";
+    ["Photography","Videos"].forEach(function(c,i){var b=el("button","",c);b.type="button";b.className=i?"":"on";b.setAttribute("aria-pressed",i?"false":"true");
         b.onclick=function(){curCat=c;[].forEach.call(flt.children,function(x){x.className="";x.setAttribute("aria-pressed","false")});b.className="on";b.setAttribute("aria-pressed","true");applyFilter()};flt.appendChild(b)});
     function applyFilter(){var n=0;[].forEach.call(grid.querySelectorAll(".card"),function(s){var h=curCat!=="All"&&s.dataset.cat!==curCat;s.classList.toggle("hide",h);if(!h)n++});
         var e=grid.querySelector(".empty");if(e)e.classList.toggle("hide",n>0)}
@@ -270,7 +269,7 @@
         applyFilter();buildRing()}
     function load(){dbAll().then(function(rows){
         ITEMS.forEach(function(x){if(x.url)URL.revokeObjectURL(x.url)});
-        var local=rows.map(function(r){return{id:r.id,local:true,type:r.kind==="video"?"video":"",url:URL.createObjectURL(r.blob),title:r.title,cat:r.cat,meta:r.meta}}).reverse();
+        var local=rows.map(function(r){return{id:r.id,local:true,type:r.kind==="video"?"video":"",url:URL.createObjectURL(r.blob),title:r.title,cat:r.kind==="video"?"Videos":"Photography",meta:r.meta}}).reverse();
         ITEMS=local.concat(STATIC);render()})}
 
     // 3D ring (hero)
@@ -335,11 +334,11 @@
         if(!document.body.classList.contains("admin"))return say("Log in first.");
         if(!DB)return say("This browser can’t store files here. Try a different browser or turn off private mode.");
         var files=[].slice.call(document.getElementById("af").files);if(!files.length)return say("Choose at least one photo or video.");
-        var title=document.getElementById("at").value.trim(),cat=document.getElementById("ac").value,meta=document.getElementById("ad").value.trim(),done=0;
+        var title=document.getElementById("at").value.trim(),meta=document.getElementById("ad").value.trim(),done=0;
         say("Adding…",true);
         files.reduce(function(chain,f){return chain.then(function(){
             var vid=f.type.indexOf("video")===0;if(!vid&&f.type.indexOf("image")!==0)return;
-            return(vid?Promise.resolve(f):shrink(f)).then(function(b){return dbPut({kind:vid?"video":"image",blob:b,title:title||f.name.replace(/\.[^.]+$/,""),cat:cat,meta:meta})}).then(function(){done++})})},Promise.resolve())
+            return(vid?Promise.resolve(f):shrink(f)).then(function(b){return dbPut({kind:vid?"video":"image",blob:b,title:title||f.name.replace(/\.[^.]+$/,""),cat:vid?"Videos":"Photography",meta:meta})}).then(function(){done++})})},Promise.resolve())
             .then(function(){document.getElementById("af").value="";document.getElementById("at").value="";load();say(done+" added to the gallery.",true)})
             .catch(function(){say("Couldn’t save a file. It may be too large for this browser’s storage.")})};
 
