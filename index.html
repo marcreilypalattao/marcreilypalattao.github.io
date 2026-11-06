@@ -98,6 +98,7 @@
         #gate .box>p{margin-bottom:6px}
         #gate form{text-align:left}
         #gate .acts{justify-content:center}
+        #gate details{margin-top:18px;text-align:left;color:var(--mut);font-size:.9rem}#gate summary{cursor:pointer;color:var(--teal)}
         #gate textarea{width:100%;margin-top:10px;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--teal);font:.8rem ui-monospace,Consolas,monospace;resize:none}
         #adm{position:fixed;inset:0;z-index:95;background:rgba(8,5,16,.8);display:none;place-items:center;padding:18px;overflow:auto}
         #adm.open{display:grid}
@@ -127,256 +128,259 @@
             <form id="gForm"><label for="gu">Username</label><input id="gu" autocomplete="username" required>
                 <label for="gp">Password</label><input id="gp" type="password" autocomplete="current-password" required>
                 <div class="msg" id="gMsg" role="status"></div>
-                <div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form></div>
+                <div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form>
+            <details id="gPub" class="hidden"><summary>Make this login work for visitors</summary>
+                <p>Replace the line starting with <b>var GATE=</b> in <b>index.html</b> with this line, then upload the file to GitHub:</p>
+                <textarea id="gCode" readonly rows="4" aria-label="Line to paste into index.html"></textarea>
+                <div class="acts"><button class="btn" id="gCopy" type="button">Copy line</button></div></details></div>
         <div id="gSetupV" class="hidden"><p>Create the username and password visitors will use to open your portfolio.</p>
             <form id="gSetForm"><label for="nu">Username</label><input id="nu" autocomplete="off" required>
                 <label for="np">Password (at least 8 characters)</label><input id="np" type="password" autocomplete="new-password" required>
                 <label for="np2">Repeat password</label><input id="np2" type="password" autocomplete="new-password" required>
                 <div class="msg" id="nMsg" role="status"></div>
                 <div class="acts"><button class="btn fill" type="submit">Create login</button></div></form>
-            <div id="gDone" class="hidden"><p>Login created. To make it work for visitors, replace the line starting with <b>var GATE=</b> in <b>index.html</b> with this line, then upload the file to GitHub:</p>
-                <textarea id="gCode" readonly rows="4" aria-label="Line to paste into index.html"></textarea>
-                <div class="acts"><button class="btn" id="gCopy" type="button">Copy line</button><button class="btn fill" id="gGo" type="button">Continue to portfolio</button></div></div></div></div></div>
-<nav><div class="wrap"><b>Russel Heinrich Sawyer</b>
-    <ul><li><a href="#home">Home</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div></nav>
+        </div></div>
+    <nav><div class="wrap"><b>Russel Heinrich Sawyer</b>
+        <ul><li><a href="#home">Home</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div></nav>
 
-<main>
-    <section class="hero" id="home"><div class="wrap">
-        <div>
-            <h1>Russel Heinrich <span>Sawyer</span></h1>
-            <div class="role" aria-live="off"><span id="typed"></span><i aria-hidden="true"></i></div>
-            <p class="tag">Crafting dreams into reality, one stroke at a time.</p>
-            <div class="row soc">
-                <a href="https://www.instagram.com/russ.heinrich/?__pwa=1" aria-label="Instagram: russ.heinrich" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-                <a href="https://www.instagram.com/russilog_/?__pwa=1" aria-label="Instagram: russilog_" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-                <a href="https://www.tiktok.com/@haynrich123" aria-label="TikTok" target="_blank" rel="noopener"><svg class="f" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
-                <a href="https://www.facebook.com/russel.sawyer.5" aria-label="Facebook" target="_blank" rel="noopener">f</a>
+    <main>
+        <section class="hero" id="home"><div class="wrap">
+            <div>
+                <h1>Russel Heinrich <span>Sawyer</span></h1>
+                <div class="role" aria-live="off"><span id="typed"></span><i aria-hidden="true"></i></div>
+                <p class="tag">Crafting dreams into reality, one stroke at a time.</p>
+                <div class="row soc">
+                    <a href="https://www.instagram.com/russ.heinrich/?__pwa=1" aria-label="Instagram: russ.heinrich" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+                    <a href="https://www.instagram.com/russilog_/?__pwa=1" aria-label="Instagram: russilog_" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+                    <a href="https://www.tiktok.com/@haynrich123" aria-label="TikTok" target="_blank" rel="noopener"><svg class="f" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+                    <a href="https://www.facebook.com/russel.sawyer.5" aria-label="Facebook" target="_blank" rel="noopener">f</a>
+                </div>
+                <div class="row"><a class="btn fill" href="#gallery">View gallery</a><a class="btn" href="#contact">Contact me</a></div>
             </div>
-            <div class="row"><a class="btn fill" href="#gallery">View gallery</a><a class="btn" href="#contact">Contact me</a></div>
-        </div>
-        <div>
-            <div class="stage" id="stage"><div class="scene" id="scene"><div class="ring" id="ring"></div></div></div>
-            <p class="hint">Move your pointer to tilt. Click a panel to open it.</p>
-        </div>
-    </div></section>
+            <div>
+                <div class="stage" id="stage"><div class="scene" id="scene"><div class="ring" id="ring"></div></div></div>
+                <p class="hint">Move your pointer to tilt. Click a panel to open it.</p>
+            </div>
+        </div></section>
 
-    <section class="blk" id="gallery"><div class="wrap">
-        <div class="head"><h2>Gallery</h2><p>Click any frame to view it large. Use the arrow keys to browse.</p></div>
-        <div class="flt" id="flt" role="group" aria-label="Filter gallery by category"></div>
-        <div class="grid" id="grid"></div>
-    </div></section>
+        <section class="blk" id="gallery"><div class="wrap">
+            <div class="head"><h2>Gallery</h2><p>Click any frame to view it large. Use the arrow keys to browse.</p></div>
+            <div class="flt" id="flt" role="group" aria-label="Filter gallery by category"></div>
+            <div class="grid" id="grid"></div>
+        </div></section>
 
-    <section class="blk" id="about"><div class="wrap">
-        <div class="head"><h2>About me</h2></div>
-        <div class="about">
-            <div class="panel bio"><h3>Bio</h3><p>I’m Russel Heinrich Sawyer, a creative individual with a passion for exploring different forms of art and self-expression.
+        <section class="blk" id="about"><div class="wrap">
+            <div class="head"><h2>About me</h2></div>
+            <div class="about">
+                <div class="panel bio"><h3>Bio</h3><p>I’m Russel Heinrich Sawyer, a creative individual with a passion for exploring different forms of art and self-expression.
 
-                Photography is one of the ways I see and interpret the world, but my creativity doesn’t end behind the camera. I’m also drawn to dance, music, painting, makeup, and other forms of visual expression.
+                    Photography is one of the ways I see and interpret the world, but my creativity doesn’t end behind the camera. I’m also drawn to dance, music, painting, makeup, and other forms of visual expression.
 
-                I’m naturally curious about things I haven’t tried, ideas I haven’t explored, and versions of myself I have yet to discover. I believe creativity is not limited to one medium or one identity. It’s something that continues to evolve as we experience life, learn, and grow.
+                    I’m naturally curious about things I haven’t tried, ideas I haven’t explored, and versions of myself I have yet to discover. I believe creativity is not limited to one medium or one identity. It’s something that continues to evolve as we experience life, learn, and grow.
 
-                This space is a reflection of who I am, what I create, what inspires me, and the things I’m still discovering about myself.
+                    This space is a reflection of who I am, what I create, what inspires me, and the things I’m still discovering about myself.
 
-                Forever curious, forever learning.</p></div>
-            <div class="side">
-                <div class="panel"><h3>Location</h3><p>Pasay</p></div>
-                <div class="panel"><h3>Hobbies</h3><ul class="chips"><li>Dancing</li><li>Photography</li><li>Singing</li><li>Sketching</li><li>Painting</li><li>Drawing</li></ul></div>
-                <div class="panel"><h3>Skills</h3><ul class="chips"><li>Problem Solving</li><li>Time Management</li><li>Quick Learning</li><li>Strong Communication</li><li>Team Collaboration</li><li>Analytical Thinking</li></ul></div>
-            </div></div>
-    </div></section>
+                    Forever curious, forever learning.</p></div>
+                <div class="side">
+                    <div class="panel"><h3>Location</h3><p>Pasay</p></div>
+                    <div class="panel"><h3>Hobbies</h3><ul class="chips"><li>Dancing</li><li>Photography</li><li>Singing</li><li>Sketching</li><li>Painting</li><li>Drawing</li></ul></div>
+                    <div class="panel"><h3>Skills</h3><ul class="chips"><li>Problem Solving</li><li>Time Management</li><li>Quick Learning</li><li>Strong Communication</li><li>Team Collaboration</li><li>Analytical Thinking</li></ul></div>
+                </div></div>
+        </div></section>
 
-    <section class="blk" id="contact"><div class="wrap">
-        <div class="head"><h2>Contact</h2></div>
-        <div class="contact"><p>Ready to book a shoot or have a quick question? Message me on Instagram and I’ll reply as soon as I can.</p>
-            <div class="panel"><h3>Instagram</h3><a href="https://www.instagram.com/russ.heinrich/?__pwa=1" target="_blank" rel="noopener">russ.heinrich</a></div></div>
-    </div></section>
-</main>
+        <section class="blk" id="contact"><div class="wrap">
+            <div class="head"><h2>Contact</h2></div>
+            <div class="contact"><p>Ready to book a shoot or have a quick question? Message me on Instagram and I’ll reply as soon as I can.</p>
+                <div class="panel"><h3>Instagram</h3><a href="https://www.instagram.com/russ.heinrich/?__pwa=1" target="_blank" rel="noopener">russ.heinrich</a></div></div>
+        </div></section>
+    </main>
 
-<footer>© 2026 Russel Heinrich Sawyer<button id="admOpen" type="button">Admin</button></footer>
+    <footer>© 2026 Russel Heinrich Sawyer<button id="admOpen" type="button">Admin</button></footer>
 
-<div id="lb" role="dialog" aria-modal="true" aria-label="Viewer"><div class="lbs"><button class="lbb" id="lbx" aria-label="Close">&times;</button><button class="lbb" id="lbp" aria-label="Previous">&#8249;</button><div id="lbm"></div><button class="lbb" id="lbn" aria-label="Next">&#8250;</button></div><div class="lbi"><h3 id="lbt"></h3><p id="lbd"></p></div></div>
+    <div id="lb" role="dialog" aria-modal="true" aria-label="Viewer"><div class="lbs"><button class="lbb" id="lbx" aria-label="Close">&times;</button><button class="lbb" id="lbp" aria-label="Previous">&#8249;</button><div id="lbm"></div><button class="lbb" id="lbn" aria-label="Next">&#8250;</button></div><div class="lbi"><h3 id="lbt"></h3><p id="lbd"></p></div></div>
 
-<div id="adm" role="dialog" aria-modal="true" aria-label="Admin">
-    <div class="box">
-        <div id="vSetup" class="hidden"><h3>Create admin account</h3><p>First time here. Choose the username and password only you will use.</p>
-            <label for="su">Username</label><input id="su" autocomplete="username">
-            <label for="sp">Password (at least 8 characters)</label><input id="sp" type="password" autocomplete="new-password">
-            <label for="sp2">Repeat password</label><input id="sp2" type="password" autocomplete="new-password">
-            <div class="acts"><button class="btn fill" id="bSetup" type="button">Create admin</button><button class="btn" data-close type="button">Cancel</button></div></div>
-        <div id="vLogin" class="hidden"><h3>Admin login</h3><p>Log in to add or remove your photos and videos.</p>
-            <label for="lu">Username</label><input id="lu" autocomplete="username">
-            <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password">
-            <div class="acts"><button class="btn fill" id="bLogin" type="button">Log in</button><button class="btn" data-close type="button">Cancel</button></div></div>
-        <div id="vPanel" class="hidden"><h3>Add to gallery</h3><p>Choose photos or videos from your device. They appear in the gallery right away.</p>
-            <label for="af">Files</label><input id="af" type="file" accept="image/*,video/*" multiple>
-            <label for="at">Title</label><input id="at" placeholder="Leave blank to use the file name">
-            <label for="ac">Category</label><select id="ac"><option>Photography</option><option>Singing</option><option>Dancing</option><option>Arts</option></select>
-            <label for="ad">Date or note</label><input id="ad" placeholder="e.g. November 2026">
-            <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div></div>
-        <div class="msg" id="msg" role="status"></div>
-    </div></div>
+    <div id="adm" role="dialog" aria-modal="true" aria-label="Admin">
+        <div class="box">
+            <div id="vSetup" class="hidden"><h3>Create admin account</h3><p>First time here. Choose the username and password only you will use.</p>
+                <label for="su">Username</label><input id="su" autocomplete="username">
+                <label for="sp">Password (at least 8 characters)</label><input id="sp" type="password" autocomplete="new-password">
+                <label for="sp2">Repeat password</label><input id="sp2" type="password" autocomplete="new-password">
+                <div class="acts"><button class="btn fill" id="bSetup" type="button">Create admin</button><button class="btn" data-close type="button">Cancel</button></div></div>
+            <div id="vLogin" class="hidden"><h3>Admin login</h3><p>Log in to add or remove your photos and videos.</p>
+                <label for="lu">Username</label><input id="lu" autocomplete="username">
+                <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password">
+                <div class="acts"><button class="btn fill" id="bLogin" type="button">Log in</button><button class="btn" data-close type="button">Cancel</button></div></div>
+            <div id="vPanel" class="hidden"><h3>Add to gallery</h3><p>Choose photos or videos from your device. They appear in the gallery right away.</p>
+                <label for="af">Files</label><input id="af" type="file" accept="image/*,video/*" multiple>
+                <label for="at">Title</label><input id="at" placeholder="Leave blank to use the file name">
+                <label for="ac">Category</label><select id="ac"><option>Photography</option><option>Singing</option><option>Dancing</option><option>Arts</option></select>
+                <label for="ad">Date or note</label><input id="ad" placeholder="e.g. November 2026">
+                <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div></div>
+            <div class="msg" id="msg" role="status"></div>
+        </div></div>
 
-<script>
-    var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-    function P(n,t,c,m){return{src:"photos/photo"+n+".jpg",title:t,cat:c,meta:m}}
-    function V(n,t,c,m){return{type:"video",src:"photos/"+n+".mp4",poster:"photos/"+n+".jpg",title:t,cat:c,meta:m}}
-    var STATIC=[
-        P(1,"Charlie Fleming","Photography","November 2025"),P(2,"Ashley Sarmiento","Photography","May 2026"),P(5,"Marco Masa","Photography","February 2026"),P(7,"Alex Diaz","Photography","July 2026"),
-        P(9,"Emilia Asiana Doesnt","Photography","October 2025"),P(10,"Franzcheska Cesas","Photography","February 2026"),P(11,"Gel Jimenez","Photography","December 2025"),P(12,"Sheena Andrada","Photography","March 2025"),
-        P(13,"Sheena Andrada","Photography","May 2025"),P(14,"Marco Aurelio Avile Leon","Photography","March 2026"),P(15,"Kenard Marquez","Photography","February 2026"),P(16,"Photo","Photography","February 2026"),
-        P(17,"Sofia Trazona","Photography","May 2026"),P(18,"Photo","Photography","February 2026"),P(19,"Loue Slao","Photography","September 2025"),P(20,"Sidney Flores","Photography","June 2025"),
-        P(28,"Beauty Makeup","Arts",""),P(30,"Fruit Carving","Arts",""),P(21,"Scribble Art","Arts",""),P(22,"Costume Making","Arts",""),P(23,"Special Effect Makeup","Arts",""),P(31,"Special Effect Makeup","Arts",""),
-        P(24,"Still Life Drawing","Arts",""),P(25,"Realistic Portrait","Arts",""),P(26,"Tattoo","Arts",""),P(29,"Tattoo","Arts",""),P(27,"Painting","Arts",""),P(32,"Granger Sketch","Arts",""),
-        P(34,"Poster Making","Arts",""),P(35,"Painting","Arts",""),P(36,"Painting","Arts",""),
-        V("bts1","BTS Anton Vinzon","Photography","February 2026"),V("bts2","BTS Marco Masa","Photography","December 2025"),V("bts3","BTS Ashley Sarmiento","Photography","May 2026"),
-        V("singing2","Passenger Seat Cover","Singing","September 2026"),V("dancing1","Stickwitu Dance Choreo","Dancing","July 2026"),V("dancing2","Dance Choreo","Dancing","September 2026"),V("dancing3","Rich Man Dance Choreo","Dancing","June 2026")
-    ];
-    function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
-    function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+    <script>
+        var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+        function P(n,t,c,m){return{src:"photos/photo"+n+".jpg",title:t,cat:c,meta:m}}
+        function V(n,t,c,m){return{type:"video",src:"photos/"+n+".mp4",poster:"photos/"+n+".jpg",title:t,cat:c,meta:m}}
+        var STATIC=[
+            P(1,"Charlie Fleming","Photography","November 2025"),P(2,"Ashley Sarmiento","Photography","May 2026"),P(5,"Marco Masa","Photography","February 2026"),P(7,"Alex Diaz","Photography","July 2026"),
+            P(9,"Emilia Asiana Doesnt","Photography","October 2025"),P(10,"Franzcheska Cesas","Photography","February 2026"),P(11,"Gel Jimenez","Photography","December 2025"),P(12,"Sheena Andrada","Photography","March 2025"),
+            P(13,"Sheena Andrada","Photography","May 2025"),P(14,"Marco Aurelio Avile Leon","Photography","March 2026"),P(15,"Kenard Marquez","Photography","February 2026"),P(16,"Photo","Photography","February 2026"),
+            P(17,"Sofia Trazona","Photography","May 2026"),P(18,"Photo","Photography","February 2026"),P(19,"Loue Slao","Photography","September 2025"),P(20,"Sidney Flores","Photography","June 2025"),
+            P(28,"Beauty Makeup","Arts",""),P(30,"Fruit Carving","Arts",""),P(21,"Scribble Art","Arts",""),P(22,"Costume Making","Arts",""),P(23,"Special Effect Makeup","Arts",""),P(31,"Special Effect Makeup","Arts",""),
+            P(24,"Still Life Drawing","Arts",""),P(25,"Realistic Portrait","Arts",""),P(26,"Tattoo","Arts",""),P(29,"Tattoo","Arts",""),P(27,"Painting","Arts",""),P(32,"Granger Sketch","Arts",""),
+            P(34,"Poster Making","Arts",""),P(35,"Painting","Arts",""),P(36,"Painting","Arts",""),
+            V("bts1","BTS Anton Vinzon","Photography","February 2026"),V("bts2","BTS Marco Masa","Photography","December 2025"),V("bts3","BTS Ashley Sarmiento","Photography","May 2026"),
+            V("singing2","Passenger Seat Cover","Singing","September 2026"),V("dancing1","Stickwitu Dance Choreo","Dancing","July 2026"),V("dancing2","Dance Choreo","Dancing","September 2026"),V("dancing3","Rich Man Dance Choreo","Dancing","June 2026")
+        ];
+        function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
+        function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 
-    // Typing roles
-    (function(){var roles=["Photographer","Singer","Dancer","Tattoo Artist","Concept Artist"],t=document.getElementById("typed");
-        if(reduce){t.textContent=roles.join(" · ");return}
-        var r=0,i=0,del=false;(function tick(){var w=roles[r];t.textContent=w.slice(0,i);
-            if(!del&&i<w.length){i++;setTimeout(tick,90)}else if(!del){del=true;setTimeout(tick,1300)}else if(i>0){i--;setTimeout(tick,45)}else{del=false;r=(r+1)%roles.length;setTimeout(tick,250)}})()})();
+        // Typing roles
+        (function(){var roles=["Photographer","Singer","Dancer","Tattoo Artist","Concept Artist"],t=document.getElementById("typed");
+            if(reduce){t.textContent=roles.join(" · ");return}
+            var r=0,i=0,del=false;(function tick(){var w=roles[r];t.textContent=w.slice(0,i);
+                if(!del&&i<w.length){i++;setTimeout(tick,90)}else if(!del){del=true;setTimeout(tick,1300)}else if(i>0){i--;setTimeout(tick,45)}else{del=false;r=(r+1)%roles.length;setTimeout(tick,250)}})()})();
 
-    // ===== Local (admin) storage in IndexedDB =====
-    var DB=null;
-    function openDB(){return new Promise(function(res){
-        try{var q=indexedDB.open("folio",1);q.onupgradeneeded=function(){q.result.createObjectStore("items",{keyPath:"id",autoIncrement:true})};
-            q.onsuccess=function(){DB=q.result;res(DB)};q.onerror=function(){res(null)}}catch(e){res(null)}})}
-    function dbAll(){return new Promise(function(res){if(!DB)return res([]);var r=DB.transaction("items").objectStore("items").getAll();r.onsuccess=function(){res(r.result||[])};r.onerror=function(){res([])}})}
-    function dbPut(v){return new Promise(function(res,rej){var t=DB.transaction("items","readwrite");t.objectStore("items").add(v);t.oncomplete=res;t.onerror=rej})}
-    function dbDel(id){return new Promise(function(res){var t=DB.transaction("items","readwrite");t.objectStore("items").delete(id);t.oncomplete=res})}
+        // ===== Local (admin) storage in IndexedDB =====
+        var DB=null;
+        function openDB(){return new Promise(function(res){
+            try{var q=indexedDB.open("folio",1);q.onupgradeneeded=function(){q.result.createObjectStore("items",{keyPath:"id",autoIncrement:true})};
+                q.onsuccess=function(){DB=q.result;res(DB)};q.onerror=function(){res(null)}}catch(e){res(null)}})}
+        function dbAll(){return new Promise(function(res){if(!DB)return res([]);var r=DB.transaction("items").objectStore("items").getAll();r.onsuccess=function(){res(r.result||[])};r.onerror=function(){res([])}})}
+        function dbPut(v){return new Promise(function(res,rej){var t=DB.transaction("items","readwrite");t.objectStore("items").add(v);t.oncomplete=res;t.onerror=rej})}
+        function dbDel(id){return new Promise(function(res){var t=DB.transaction("items","readwrite");t.objectStore("items").delete(id);t.oncomplete=res})}
 
-    // ===== Gallery =====
-    var ITEMS=[],grid=document.getElementById("grid"),flt=document.getElementById("flt"),curCat="All";
-    ["All","Photography","Singing","Dancing","Arts"].forEach(function(c,i){var b=el("button","",c);b.type="button";b.className=i?"":"on";b.setAttribute("aria-pressed",i?"false":"true");
-        b.onclick=function(){curCat=c;[].forEach.call(flt.children,function(x){x.className="";x.setAttribute("aria-pressed","false")});b.className="on";b.setAttribute("aria-pressed","true");applyFilter()};flt.appendChild(b)});
-    function applyFilter(){var n=0;[].forEach.call(grid.querySelectorAll(".card"),function(s){var h=curCat!=="All"&&s.dataset.cat!==curCat;s.classList.toggle("hide",h);if(!h)n++});
-        var e=grid.querySelector(".empty");if(e)e.classList.toggle("hide",n>0)}
-    function tilt(e,max){var r=e.getBoundingClientRect();
-        e.addEventListener("pointermove",function(ev){if(reduce||ev.pointerType==="touch")return;var x=(ev.clientX-r.left)/r.width-.5,y=(ev.clientY-r.top)/r.height-.5;e.style.setProperty("--ry",(x*max)+"deg");e.style.setProperty("--rx",(-y*max)+"deg")});
-        e.addEventListener("pointerenter",function(){r=e.getBoundingClientRect()});
-        e.addEventListener("pointerleave",function(){e.style.setProperty("--rx","0deg");e.style.setProperty("--ry","0deg")})}
-    function thumb(it){
-        if(it.type==="video"&&it.local)return '<video src="'+it.url+'#t=0.1" muted playsinline preload="metadata"></video>';
-        var s=it.type==="video"?it.poster:(it.local?it.url:it.src);
-        return s?'<img src="'+s+'" alt="'+esc(it.title)+'" loading="lazy">':''}
-    function render(){
-        grid.innerHTML="";
-        ITEMS.forEach(function(it,i){var b=el("button","card"+(it.local?" mine":""));b.type="button";b.dataset.cat=it.cat;b.setAttribute("aria-label","Open "+it.title);
-            b.innerHTML=thumb(it)+(it.type==="video"?'<span class="play" aria-hidden="true"></span>':'')+(it.local?'<span class="mine-badge">Yours</span>':'')+'<span class="cap"><b>'+esc(it.title)+'</b><span>'+esc(it.cat)+(it.meta?" · "+esc(it.meta):"")+'</span></span>';
-            var im=b.querySelector("img");if(im)im.addEventListener("error",function(){this.style.display="none"});
-            if(it.local){var d=el("span","del","&times;");d.setAttribute("role","button");d.setAttribute("aria-label","Delete "+it.title);d.tabIndex=0;
-                var go=function(ev){ev.stopPropagation();if(confirm("Delete “"+it.title+"”?"))dbDel(it.id).then(load)};
-                d.onclick=go;d.onkeydown=function(ev){if(ev.key==="Enter")go(ev)};b.appendChild(d)}
-            b.onclick=function(){openLb(i)};tilt(b,14);grid.appendChild(b)});
-        grid.appendChild(el("p","empty hide","Nothing in this category yet."));
-        applyFilter();buildRing()}
-    function load(){dbAll().then(function(rows){
-        ITEMS.forEach(function(x){if(x.url)URL.revokeObjectURL(x.url)});
-        var local=rows.map(function(r){return{id:r.id,local:true,type:r.kind==="video"?"video":"",url:URL.createObjectURL(r.blob),title:r.title,cat:r.cat,meta:r.meta}}).reverse();
-        ITEMS=local.concat(STATIC);render()})}
+        // ===== Gallery =====
+        var ITEMS=[],grid=document.getElementById("grid"),flt=document.getElementById("flt"),curCat="All";
+        ["All","Photography","Singing","Dancing","Arts"].forEach(function(c,i){var b=el("button","",c);b.type="button";b.className=i?"":"on";b.setAttribute("aria-pressed",i?"false":"true");
+            b.onclick=function(){curCat=c;[].forEach.call(flt.children,function(x){x.className="";x.setAttribute("aria-pressed","false")});b.className="on";b.setAttribute("aria-pressed","true");applyFilter()};flt.appendChild(b)});
+        function applyFilter(){var n=0;[].forEach.call(grid.querySelectorAll(".card"),function(s){var h=curCat!=="All"&&s.dataset.cat!==curCat;s.classList.toggle("hide",h);if(!h)n++});
+            var e=grid.querySelector(".empty");if(e)e.classList.toggle("hide",n>0)}
+        function tilt(e,max){var r=e.getBoundingClientRect();
+            e.addEventListener("pointermove",function(ev){if(reduce||ev.pointerType==="touch")return;var x=(ev.clientX-r.left)/r.width-.5,y=(ev.clientY-r.top)/r.height-.5;e.style.setProperty("--ry",(x*max)+"deg");e.style.setProperty("--rx",(-y*max)+"deg")});
+            e.addEventListener("pointerenter",function(){r=e.getBoundingClientRect()});
+            e.addEventListener("pointerleave",function(){e.style.setProperty("--rx","0deg");e.style.setProperty("--ry","0deg")})}
+        function thumb(it){
+            if(it.type==="video"&&it.local)return '<video src="'+it.url+'#t=0.1" muted playsinline preload="metadata"></video>';
+            var s=it.type==="video"?it.poster:(it.local?it.url:it.src);
+            return s?'<img src="'+s+'" alt="'+esc(it.title)+'" loading="lazy">':''}
+        function render(){
+            grid.innerHTML="";
+            ITEMS.forEach(function(it,i){var b=el("button","card"+(it.local?" mine":""));b.type="button";b.dataset.cat=it.cat;b.setAttribute("aria-label","Open "+it.title);
+                b.innerHTML=thumb(it)+(it.type==="video"?'<span class="play" aria-hidden="true"></span>':'')+(it.local?'<span class="mine-badge">Yours</span>':'')+'<span class="cap"><b>'+esc(it.title)+'</b><span>'+esc(it.cat)+(it.meta?" · "+esc(it.meta):"")+'</span></span>';
+                var im=b.querySelector("img");if(im)im.addEventListener("error",function(){this.style.display="none"});
+                if(it.local){var d=el("span","del","&times;");d.setAttribute("role","button");d.setAttribute("aria-label","Delete "+it.title);d.tabIndex=0;
+                    var go=function(ev){ev.stopPropagation();if(confirm("Delete “"+it.title+"”?"))dbDel(it.id).then(load)};
+                    d.onclick=go;d.onkeydown=function(ev){if(ev.key==="Enter")go(ev)};b.appendChild(d)}
+                b.onclick=function(){openLb(i)};tilt(b,14);grid.appendChild(b)});
+            grid.appendChild(el("p","empty hide","Nothing in this category yet."));
+            applyFilter();buildRing()}
+        function load(){dbAll().then(function(rows){
+            ITEMS.forEach(function(x){if(x.url)URL.revokeObjectURL(x.url)});
+            var local=rows.map(function(r){return{id:r.id,local:true,type:r.kind==="video"?"video":"",url:URL.createObjectURL(r.blob),title:r.title,cat:r.cat,meta:r.meta}}).reverse();
+            ITEMS=local.concat(STATIC);render()})}
 
-    // 3D ring (hero)
-    function buildRing(){var ring=document.getElementById("ring");ring.innerHTML="";
-        var pics=ITEMS.filter(function(x){return x.type!=="video"&&x.cat==="Photography"}).slice(0,8),n=pics.length;if(!n)return;
-        pics.forEach(function(it,k){var p=el("button","pane",'<img src="'+(it.local?it.url:it.src)+'" alt="'+esc(it.title)+'">');p.type="button";p.setAttribute("aria-label","Open "+it.title);
-            p.style.transform="rotateY("+(k*360/n)+"deg) translateZ("+getComputedStyle(document.documentElement).getPropertyValue("--r").trim()+")";
-            var im=p.querySelector("img");im.addEventListener("error",function(){p.style.display="none"});
-            p.onclick=function(){openLb(ITEMS.indexOf(it))};ring.appendChild(p)})}
-    (function(){var st=document.getElementById("stage"),sc=document.getElementById("scene");
-        st.addEventListener("pointermove",function(e){if(reduce)return;var r=st.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;sc.style.transform="rotateX("+(-y*22)+"deg) rotateY("+(x*30)+"deg)"});
-        st.addEventListener("pointerleave",function(){sc.style.transform=""});
-        addEventListener("resize",buildRing)})();
+        // 3D ring (hero)
+        function buildRing(){var ring=document.getElementById("ring");ring.innerHTML="";
+            var pics=ITEMS.filter(function(x){return x.type!=="video"&&x.cat==="Photography"}).slice(0,8),n=pics.length;if(!n)return;
+            pics.forEach(function(it,k){var p=el("button","pane",'<img src="'+(it.local?it.url:it.src)+'" alt="'+esc(it.title)+'">');p.type="button";p.setAttribute("aria-label","Open "+it.title);
+                p.style.transform="rotateY("+(k*360/n)+"deg) translateZ("+getComputedStyle(document.documentElement).getPropertyValue("--r").trim()+")";
+                var im=p.querySelector("img");im.addEventListener("error",function(){p.style.display="none"});
+                p.onclick=function(){openLb(ITEMS.indexOf(it))};ring.appendChild(p)})}
+        (function(){var st=document.getElementById("stage"),sc=document.getElementById("scene");
+            st.addEventListener("pointermove",function(e){if(reduce)return;var r=st.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;sc.style.transform="rotateX("+(-y*22)+"deg) rotateY("+(x*30)+"deg)"});
+            st.addEventListener("pointerleave",function(){sc.style.transform=""});
+            addEventListener("resize",buildRing)})();
 
-    // Lightbox
-    var lb=document.getElementById("lb"),lbm=document.getElementById("lbm"),cur=0,lastF=null;
-    function vis(){var o=[];[].forEach.call(grid.querySelectorAll(".card"),function(s,i){if(!s.classList.contains("hide"))o.push(i)});return o}
-    function showLb(i){cur=i;var it=ITEMS[i];lbm.innerHTML="";
-        if(it.type==="video"){var v=document.createElement("video");v.src=it.local?it.url:it.src;v.controls=true;v.autoplay=true;v.playsInline=true;if(it.poster&&!it.local)v.poster=it.poster;lbm.appendChild(v)}
-        else{var im=new Image();im.alt=it.title;im.src=it.local?it.url:it.src;lbm.appendChild(im)}
-        document.getElementById("lbt").textContent=it.title;document.getElementById("lbd").textContent=it.cat+(it.meta?" · "+it.meta:"")}
-    function openLb(i){lastF=document.activeElement;lb.classList.add("open");document.body.style.overflow="hidden";showLb(i);document.getElementById("lbx").focus()}
-    function closeLb(){lb.classList.remove("open");lbm.innerHTML="";document.body.style.overflow="";if(lastF)lastF.focus()}
-    function mv(d){var v=vis();if(!v.length)return;var k=v.indexOf(cur);if(k<0)k=0;showLb(v[(k+d+v.length)%v.length])}
-    document.getElementById("lbx").onclick=closeLb;document.getElementById("lbp").onclick=function(){mv(-1)};document.getElementById("lbn").onclick=function(){mv(1)};
-    lb.addEventListener("click",function(e){if(e.target===lb||e.target.classList.contains("lbs"))closeLb()});
-    document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(lb.classList.contains("open"))closeLb();else closeAdm()}
-        if(!lb.classList.contains("open"))return;if(e.key==="ArrowLeft")mv(-1);if(e.key==="ArrowRight")mv(1)});
+        // Lightbox
+        var lb=document.getElementById("lb"),lbm=document.getElementById("lbm"),cur=0,lastF=null;
+        function vis(){var o=[];[].forEach.call(grid.querySelectorAll(".card"),function(s,i){if(!s.classList.contains("hide"))o.push(i)});return o}
+        function showLb(i){cur=i;var it=ITEMS[i];lbm.innerHTML="";
+            if(it.type==="video"){var v=document.createElement("video");v.src=it.local?it.url:it.src;v.controls=true;v.autoplay=true;v.playsInline=true;if(it.poster&&!it.local)v.poster=it.poster;lbm.appendChild(v)}
+            else{var im=new Image();im.alt=it.title;im.src=it.local?it.url:it.src;lbm.appendChild(im)}
+            document.getElementById("lbt").textContent=it.title;document.getElementById("lbd").textContent=it.cat+(it.meta?" · "+it.meta:"")}
+        function openLb(i){lastF=document.activeElement;lb.classList.add("open");document.body.style.overflow="hidden";showLb(i);document.getElementById("lbx").focus()}
+        function closeLb(){lb.classList.remove("open");lbm.innerHTML="";document.body.style.overflow="";if(lastF)lastF.focus()}
+        function mv(d){var v=vis();if(!v.length)return;var k=v.indexOf(cur);if(k<0)k=0;showLb(v[(k+d+v.length)%v.length])}
+        document.getElementById("lbx").onclick=closeLb;document.getElementById("lbp").onclick=function(){mv(-1)};document.getElementById("lbn").onclick=function(){mv(1)};
+        lb.addEventListener("click",function(e){if(e.target===lb||e.target.classList.contains("lbs"))closeLb()});
+        document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(lb.classList.contains("open"))closeLb();else closeAdm()}
+            if(!lb.classList.contains("open"))return;if(e.key==="ArrowLeft")mv(-1);if(e.key==="ArrowRight")mv(1)});
 
-    // ===== Admin =====
-    var adm=document.getElementById("adm"),msg=document.getElementById("msg");
-    function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
-    function view(n){["vSetup","vLogin","vPanel"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("")}
-    function sha(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",b).then(function(h){return[].map.call(new Uint8Array(h),function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
-    function hashPw(u,p,salt){return sha(salt+"|"+u.toLowerCase()+"|"+p)}
-    function getAcct(){try{return JSON.parse(localStorage.getItem("folio_admin")||"null")}catch(e){return null}}
-    function setAdmin(on){document.body.classList.toggle("admin",on);try{on?sessionStorage.setItem("folio_in","1"):sessionStorage.removeItem("folio_in")}catch(e){}}
-    function openAdm(){lastF=document.activeElement;adm.classList.add("open");
-        if(!window.crypto||!crypto.subtle){view("vLogin");say("Admin needs a secure (https) page. Open the published site, not a local file.");return}
-        view(document.body.classList.contains("admin")?"vPanel":(getAcct()?"vLogin":"vSetup"));
-        var f=adm.querySelector(".box>div:not(.hidden) input");if(f)f.focus()}
-    function closeAdm(){adm.classList.remove("open");if(lastF&&lastF.focus)lastF.focus()}
-    document.getElementById("admOpen").onclick=openAdm;
-    [].forEach.call(adm.querySelectorAll("[data-close]"),function(b){b.onclick=closeAdm});
-    adm.addEventListener("click",function(e){if(e.target===adm)closeAdm()});
-    document.getElementById("bSetup").onclick=function(){
-        var u=document.getElementById("su").value.trim(),p=document.getElementById("sp").value,p2=document.getElementById("sp2").value;
-        if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
-        var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-        hashPw(u,p,salt).then(function(h){localStorage.setItem("folio_admin",JSON.stringify({u:u.toLowerCase(),s:salt,h:h}));setAdmin(true);view("vPanel");say("Admin created. You’re logged in.",true)})};
-    document.getElementById("bLogin").onclick=function(){
-        var a=getAcct(),u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value;
-        if(!a)return view("vSetup");
-        hashPw(u,p,a.s).then(function(h){if(u.toLowerCase()===a.u&&h===a.h){setAdmin(true);document.getElementById("lp").value="";view("vPanel")}else say("Wrong username or password.")})};
-    document.getElementById("bOut").onclick=function(){setAdmin(false);closeAdm()};
-    function shrink(file){return new Promise(function(res){
-        var u=URL.createObjectURL(file),im=new Image();
-        im.onload=function(){var m=1800,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
-            c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){res(b||file)},"image/jpeg",.88)};
-        im.onerror=function(){URL.revokeObjectURL(u);res(file)};im.src=u})}
-    document.getElementById("bAdd").onclick=function(){
-        if(!document.body.classList.contains("admin"))return say("Log in first.");
-        if(!DB)return say("This browser can’t store files here. Try a different browser or turn off private mode.");
-        var files=[].slice.call(document.getElementById("af").files);if(!files.length)return say("Choose at least one photo or video.");
-        var title=document.getElementById("at").value.trim(),cat=document.getElementById("ac").value,meta=document.getElementById("ad").value.trim(),done=0;
-        say("Adding…",true);
-        files.reduce(function(chain,f){return chain.then(function(){
-            var vid=f.type.indexOf("video")===0;if(!vid&&f.type.indexOf("image")!==0)return;
-            return(vid?Promise.resolve(f):shrink(f)).then(function(b){return dbPut({kind:vid?"video":"image",blob:b,title:title||f.name.replace(/\.[^.]+$/,""),cat:cat,meta:meta})}).then(function(){done++})})},Promise.resolve())
-            .then(function(){document.getElementById("af").value="";document.getElementById("at").value="";load();say(done+" added to the gallery.",true)})
-            .catch(function(){say("Couldn’t save a file. It may be too large for this browser’s storage.")})};
+        // ===== Admin =====
+        var adm=document.getElementById("adm"),msg=document.getElementById("msg");
+        function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
+        function view(n){["vSetup","vLogin","vPanel"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("")}
+        function sha(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",b).then(function(h){return[].map.call(new Uint8Array(h),function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
+        function hashPw(u,p,salt){return sha(salt+"|"+u.toLowerCase()+"|"+p)}
+        function getAcct(){try{return JSON.parse(localStorage.getItem("folio_admin")||"null")}catch(e){return null}}
+        function setAdmin(on){document.body.classList.toggle("admin",on);try{on?sessionStorage.setItem("folio_in","1"):sessionStorage.removeItem("folio_in")}catch(e){}}
+        function openAdm(){lastF=document.activeElement;adm.classList.add("open");
+            if(!window.crypto||!crypto.subtle){view("vLogin");say("Admin needs a secure (https) page. Open the published site, not a local file.");return}
+            view(document.body.classList.contains("admin")?"vPanel":(getAcct()?"vLogin":"vSetup"));
+            var f=adm.querySelector(".box>div:not(.hidden) input");if(f)f.focus()}
+        function closeAdm(){adm.classList.remove("open");if(lastF&&lastF.focus)lastF.focus()}
+        document.getElementById("admOpen").onclick=openAdm;
+        [].forEach.call(adm.querySelectorAll("[data-close]"),function(b){b.onclick=closeAdm});
+        adm.addEventListener("click",function(e){if(e.target===adm)closeAdm()});
+        document.getElementById("bSetup").onclick=function(){
+            var u=document.getElementById("su").value.trim(),p=document.getElementById("sp").value,p2=document.getElementById("sp2").value;
+            if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
+            var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
+            hashPw(u,p,salt).then(function(h){localStorage.setItem("folio_admin",JSON.stringify({u:u.toLowerCase(),s:salt,h:h}));setAdmin(true);view("vPanel");say("Admin created. You’re logged in.",true)})};
+        document.getElementById("bLogin").onclick=function(){
+            var a=getAcct(),u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value;
+            if(!a)return view("vSetup");
+            hashPw(u,p,a.s).then(function(h){if(u.toLowerCase()===a.u&&h===a.h){setAdmin(true);document.getElementById("lp").value="";view("vPanel")}else say("Wrong username or password.")})};
+        document.getElementById("bOut").onclick=function(){setAdmin(false);closeAdm()};
+        function shrink(file){return new Promise(function(res){
+            var u=URL.createObjectURL(file),im=new Image();
+            im.onload=function(){var m=1800,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
+                c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){res(b||file)},"image/jpeg",.88)};
+            im.onerror=function(){URL.revokeObjectURL(u);res(file)};im.src=u})}
+        document.getElementById("bAdd").onclick=function(){
+            if(!document.body.classList.contains("admin"))return say("Log in first.");
+            if(!DB)return say("This browser can’t store files here. Try a different browser or turn off private mode.");
+            var files=[].slice.call(document.getElementById("af").files);if(!files.length)return say("Choose at least one photo or video.");
+            var title=document.getElementById("at").value.trim(),cat=document.getElementById("ac").value,meta=document.getElementById("ad").value.trim(),done=0;
+            say("Adding…",true);
+            files.reduce(function(chain,f){return chain.then(function(){
+                var vid=f.type.indexOf("video")===0;if(!vid&&f.type.indexOf("image")!==0)return;
+                return(vid?Promise.resolve(f):shrink(f)).then(function(b){return dbPut({kind:vid?"video":"image",blob:b,title:title||f.name.replace(/\.[^.]+$/,""),cat:cat,meta:meta})}).then(function(){done++})})},Promise.resolve())
+                .then(function(){document.getElementById("af").value="";document.getElementById("at").value="";load();say(done+" added to the gallery.",true)})
+                .catch(function(){say("Couldn’t save a file. It may be too large for this browser’s storage.")})};
 
-    try{if(sessionStorage.getItem("folio_in")&&getAcct())document.body.classList.add("admin")}catch(e){}
-    openDB().then(function(){ITEMS=STATIC;render();load()});
+        try{if(sessionStorage.getItem("folio_in")&&getAcct())document.body.classList.add("admin")}catch(e){}
+        openDB().then(function(){ITEMS=STATIC;render();load()});
 
-    // ===== Viewer gate (front-door login) =====
-    // Leave h empty to see the "create login" screen. It prints the line to paste here.
-    var GATE={s:"gate-v1",u:"reily",h:"f9bfe0e5c6cd4c9f386bebce208e390ad15318c78765784fc705dbdf2af8cb50"};
-    (function(){var g=document.getElementById("gate");
-        function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio_gate","1")}catch(e){}}
-        try{if(GATE.h&&sessionStorage.getItem("folio_gate")==="1"){open();return}}catch(e){}
-        function gh(u,p){return sha(GATE.s+"|"+u.toLowerCase()+"|"+p)}
-        var secure=window.crypto&&crypto.subtle;
-        if(!GATE.h){
-            document.getElementById("gLoginV").classList.add("hidden");document.getElementById("gSetupV").classList.remove("hidden");
-            document.getElementById("nu").focus();
+        // ===== Viewer gate (front-door login) =====
+        // h empty = setup mode. After you paste the line from "Make this login work for visitors", visitors get a plain login.
+        var GATE={s:"gate-v1",u:"",h:""};
+        (function(){var g=document.getElementById("gate"),lv=document.getElementById("gLoginV"),sv=document.getElementById("gSetupV"),pub=document.getElementById("gPub"),code=document.getElementById("gCode"),gm=document.getElementById("gMsg");
+            function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio_gate","1")}catch(e){}}
+            try{if(sessionStorage.getItem("folio_gate")==="1"){open();return}}catch(e){}
+            var secure=window.crypto&&crypto.subtle;
+            function gh(u,p){return sha(GATE.s+"|"+u.toLowerCase()+"|"+p)}
+            function local(){try{return JSON.parse(localStorage.getItem("folio_gate_acct")||"null")}catch(e){return null}}
+            function showLogin(note){sv.classList.add("hidden");lv.classList.remove("hidden");var a=local();
+                if(!GATE.h&&a&&a.line){code.value=a.line;pub.classList.remove("hidden")}
+                if(note){gm.textContent=note;gm.className="msg ok"}document.getElementById("gu").focus()}
+            if(!GATE.h&&!local()){lv.classList.add("hidden");sv.classList.remove("hidden");document.getElementById("nu").focus()}else showLogin();
             document.getElementById("gSetForm").onsubmit=function(e){e.preventDefault();var m=document.getElementById("nMsg");
                 var u=document.getElementById("nu").value.trim().toLowerCase(),p=document.getElementById("np").value,p2=document.getElementById("np2").value;
                 if(!secure){m.textContent="Login needs a secure (https) page.";return}
                 if(!u)return m.textContent="Enter a username.";if(p.length<8)return m.textContent="Use a password with at least 8 characters.";if(p!==p2)return m.textContent="The two passwords don’t match.";
-                gh(u,p).then(function(h){document.getElementById("gCode").value='var GATE={s:"'+GATE.s+'",u:'+JSON.stringify(u)+',h:"'+h+'"};';
-                    document.getElementById("gSetForm").classList.add("hidden");document.getElementById("gDone").classList.remove("hidden")})};
-            document.getElementById("gCopy").onclick=function(){var t=document.getElementById("gCode");t.select();try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand("copy")}this.textContent="Copied"};
-            document.getElementById("gGo").onclick=open;
-            return}
-        document.getElementById("gu").focus();
-        document.getElementById("gForm").onsubmit=function(e){e.preventDefault();var m=document.getElementById("gMsg");
-            if(!secure){m.textContent="Login needs a secure (https) page.";return}
-            var u=document.getElementById("gu").value.trim(),p=document.getElementById("gp").value;
-            gh(u,p).then(function(h){if(u.toLowerCase()===GATE.u&&h===GATE.h)open();else{m.textContent="Wrong username or password.";document.getElementById("gp").value=""}})}})();
-</script>
+                gh(u,p).then(function(h){var line='var GATE={s:"'+GATE.s+'",u:'+JSON.stringify(u)+',h:"'+h+'"};';
+                    try{localStorage.setItem("folio_gate_acct",JSON.stringify({u:u,h:h,line:line}))}catch(x){}
+                    code.value=line;pub.classList.remove("hidden");showLogin("Login created. Now log in to open your portfolio.")})};
+            document.getElementById("gCopy").onclick=function(){code.select();try{navigator.clipboard.writeText(code.value)}catch(e){document.execCommand("copy")}this.textContent="Copied"};
+            document.getElementById("gForm").onsubmit=function(e){e.preventDefault();
+                if(!secure){gm.className="msg";gm.textContent="Login needs a secure (https) page.";return}
+                var u=document.getElementById("gu").value.trim().toLowerCase(),p=document.getElementById("gp").value,a=local();
+                gh(u,p).then(function(h){var ok=GATE.h?(u===GATE.u&&h===GATE.h):(a&&u===a.u&&h===a.h);
+                    if(ok)open();else{gm.className="msg";gm.textContent="Wrong username or password.";document.getElementById("gp").value=""}})}})();
+    </script>
 </body>
 </html>
