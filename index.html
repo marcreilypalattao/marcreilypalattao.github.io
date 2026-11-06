@@ -238,6 +238,8 @@
     var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
     // One admin only. Leave h empty to create the admin; then paste the line the panel gives you. After that nobody can create another admin.
     var ADMIN={s:"adm-v1",u:"",h:""};
+    // Fresh start: remove data saved by the previous version (old admin, edits, viewer accounts, uploads)
+    try{["folio_admin","folio_viewers","folio_content","folio_gate_acct"].forEach(function(k){localStorage.removeItem(k)});["folio_in","folio_gate"].forEach(function(k){sessionStorage.removeItem(k)});indexedDB.deleteDatabase("folio")}catch(e){}
     function P(n,t,c,m){return{src:"photos/photo"+n+".jpg",title:t,cat:c,meta:m}}
     function V(n,t,c,m){return{type:"video",src:"photos/"+n+".mp4",poster:"photos/"+n+".jpg",title:t,cat:c,meta:m}}
     var STATIC=[
@@ -269,7 +271,7 @@
     // ===== Local (admin) storage in IndexedDB =====
     var DB=null;
     function openDB(){return new Promise(function(res){
-        try{var q=indexedDB.open("folio",1);q.onupgradeneeded=function(){q.result.createObjectStore("items",{keyPath:"id",autoIncrement:true})};
+        try{var q=indexedDB.open("folio2",1);q.onupgradeneeded=function(){q.result.createObjectStore("items",{keyPath:"id",autoIncrement:true})};
             q.onsuccess=function(){DB=q.result;res(DB)};q.onerror=function(){res(null)}}catch(e){res(null)}})}
     function dbAll(){return new Promise(function(res){if(!DB)return res([]);var r=DB.transaction("items").objectStore("items").getAll();r.onsuccess=function(){res(r.result||[])};r.onerror=function(){res([])}})}
     function dbPut(v){return new Promise(function(res,rej){var t=DB.transaction("items","readwrite");t.objectStore("items").add(v);t.oncomplete=res;t.onerror=rej})}
@@ -338,8 +340,8 @@
     function view(n){["vSetup","vLogin","vPanel","vEdit","vItem"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("");if(n==="vPanel")showLock()}
     function sha(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",b).then(function(h){return[].map.call(new Uint8Array(h),function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
     function hashPw(u,p,salt){return sha(salt+"|"+u.toLowerCase()+"|"+p)}
-    function getAcct(){if(ADMIN.h)return{u:ADMIN.u,s:ADMIN.s,h:ADMIN.h};try{return JSON.parse(localStorage.getItem("folio_admin")||"null")}catch(e){return null}}
-    function setAdmin(on){document.body.classList.toggle("admin",on);try{on?sessionStorage.setItem("folio_in","1"):sessionStorage.removeItem("folio_in")}catch(e){}}
+    function getAcct(){if(ADMIN.h)return{u:ADMIN.u,s:ADMIN.s,h:ADMIN.h};try{return JSON.parse(localStorage.getItem("folio2_admin")||"null")}catch(e){return null}}
+    function setAdmin(on){document.body.classList.toggle("admin",on);try{on?sessionStorage.setItem("folio2_in","1"):sessionStorage.removeItem("folio2_in")}catch(e){}}
     function openAdm(){lastF=document.activeElement;adm.classList.add("open");
         if(!window.crypto||!crypto.subtle){view("vLogin");say("Admin needs a secure (https) page. Open the published site, not a local file.");return}
         view(document.body.classList.contains("admin")?"vPanel":(getAcct()?"vLogin":"vSetup"));
@@ -353,7 +355,7 @@
         var u=document.getElementById("su").value.trim(),p=document.getElementById("sp").value,p2=document.getElementById("sp2").value;
         if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
         var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-        hashPw(u,p,salt).then(function(h){localStorage.setItem("folio_admin",JSON.stringify({u:u.toLowerCase(),s:salt,h:h}));setAdmin(true);view("vPanel");say("Admin created. You’re logged in.",true)})};
+        hashPw(u,p,salt).then(function(h){localStorage.setItem("folio2_admin",JSON.stringify({u:u.toLowerCase(),s:salt,h:h}));setAdmin(true);view("vPanel");say("Admin created. You’re logged in.",true)})};
     document.getElementById("bLogin").onclick=function(){
         var a=getAcct(),u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value;
         if(!a)return view("vSetup");
@@ -382,8 +384,8 @@
 
     // ===== Site content (admin can edit everything) =====
     function $(id){return document.getElementById(id)}
-    function save(){try{localStorage.setItem("folio_content",JSON.stringify(C))}catch(e){}}
-    function initContent(){var loc=null;try{loc=JSON.parse(localStorage.getItem("folio_content")||"null")}catch(e){}
+    function save(){try{localStorage.setItem("folio2_content",JSON.stringify(C))}catch(e){}}
+    function initContent(){var loc=null;try{loc=JSON.parse(localStorage.getItem("folio2_content")||"null")}catch(e){}
         function use(j){if(j&&j.site&&Array.isArray(j.gallery)){j.site=Object.assign({},DEF.site,j.site);j.site.links=Object.assign({},DEF.site.links,j.site.links);C=j}}
         if(loc){use(loc);return Promise.resolve()}
         return fetch("content.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(use).catch(function(){})}
@@ -417,17 +419,17 @@
     $("iDel").onclick=function(){if(confirm("Remove this item from the gallery? The file stays in your photos folder on GitHub.")){C.gallery.splice(editIdx,1);save();load();closeAdm()}};
     $("bExport").onclick=function(){var b=new Blob([JSON.stringify(C,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="content.json";document.body.appendChild(a);a.click();a.remove();
         say("Downloaded content.json. Upload it to GitHub next to index.html to show your edits to everyone.",true)};
-    $("bReset").onclick=function(){if(confirm("Discard the edits saved in this browser and go back to the published version?")){try{localStorage.removeItem("folio_content")}catch(e){}location.reload()}};
+    $("bReset").onclick=function(){if(confirm("Discard the edits saved in this browser and go back to the published version?")){try{localStorage.removeItem("folio2_content")}catch(e){}location.reload()}};
 
-    try{if(sessionStorage.getItem("folio_in")&&getAcct())document.body.classList.add("admin")}catch(e){}
+    try{if(sessionStorage.getItem("folio2_in")&&getAcct())document.body.classList.add("admin")}catch(e){}
     initContent().then(openDB).then(function(){applySite();ITEMS=C.gallery;render();load()});
 
     // ===== Front door: visitors create an account; admin logs in with the admin account =====
     (function(){var g=document.getElementById("gate"),msg=document.getElementById("gMsg"),secure=window.crypto&&crypto.subtle;
         function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
-        function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio_gate","1")}catch(e){}}
-        try{if(sessionStorage.getItem("folio_gate")==="1"){open();return}}catch(e){}
-        function viewers(){try{return JSON.parse(localStorage.getItem("folio_viewers")||"[]")}catch(e){return[]}}
+        function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio2_gate","1")}catch(e){}}
+        try{if(sessionStorage.getItem("folio2_gate")==="1"){open();return}}catch(e){}
+        function viewers(){try{return JSON.parse(localStorage.getItem("folio2_viewers")||"[]")}catch(e){return[]}}
         function val(id){return document.getElementById(id).value}
         function go(n,note){["signup","login","alogin","asetup"].forEach(function(v){document.getElementById("gV-"+v).classList.toggle("hidden",v!==n)});
             document.getElementById("gBack").classList.toggle("hidden",n!=="alogin"&&n!=="asetup");
@@ -440,7 +442,7 @@
             if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
             if(list.some(function(x){return x.u===u}))return say("That username is taken. Choose another.");
             var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-            hashPw(u,p,salt).then(function(h){list.push({u:u,s:salt,h:h});try{localStorage.setItem("folio_viewers",JSON.stringify(list))}catch(x){}go("login","Account created. Now log in to view the portfolio.")})};
+            hashPw(u,p,salt).then(function(h){list.push({u:u,s:salt,h:h});try{localStorage.setItem("folio2_viewers",JSON.stringify(list))}catch(x){}go("login","Account created. Now log in to view the portfolio.")})};
         document.getElementById("fLogin").onsubmit=function(e){e.preventDefault();if(!ok())return;
             var u=val("glu").trim().toLowerCase(),p=val("glp"),acct=viewers().filter(function(x){return x.u===u})[0];
             function bad(){say("Wrong username or password.");document.getElementById("glp").value=""}
@@ -452,7 +454,7 @@
             var u=val("gcu").trim().toLowerCase(),p=val("gcp"),p2=val("gcp2");
             if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
             var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-            hashPw(u,p,salt).then(function(h){try{localStorage.setItem("folio_admin",JSON.stringify({u:u,s:salt,h:h}))}catch(x){}go("alogin","Admin created. Now log in as admin.")})};
+            hashPw(u,p,salt).then(function(h){try{localStorage.setItem("folio2_admin",JSON.stringify({u:u,s:salt,h:h}))}catch(x){}go("alogin","Admin created. Now log in as admin.")})};
         go(viewers().length?"login":"signup")})();
 </script>
 </body>
