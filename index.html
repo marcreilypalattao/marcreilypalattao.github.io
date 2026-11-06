@@ -132,7 +132,7 @@
 <div id="gate" role="dialog" aria-modal="true" aria-label="Portfolio access"><div class="box"><h1 id="gName">Russel Heinrich Sawyer</h1>
     <div id="gV-signup"><p>Create a username and password to view this portfolio.</p><form id="fSignup"><label for="gsu">Username</label><input id="gsu" type="text" autocomplete="username" required><label for="gsp">Password (at least 8 characters)</label><input id="gsp" type="password" autocomplete="new-password" required><label for="gsp2">Repeat password</label><input id="gsp2" type="password" autocomplete="new-password" required><div class="acts"><button class="btn fill" type="submit">Create account</button></div></form><button class="lnk" type="button" data-go="login">Already have an account? Log in</button></div>
     <div id="gV-login" class="hidden"><p>Log in to view this portfolio.</p><form id="fLogin"><label for="glu">Username</label><input id="glu" type="text" autocomplete="username" required><label for="glp">Password</label><input id="glp" type="password" autocomplete="current-password" required><div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form><button class="lnk" type="button" data-go="signup">New here? Create an account</button></div>
-    <div id="gV-alogin" class="hidden"><p>Admin login.</p><form id="fAdmin"><label for="gau">Admin username</label><input id="gau" type="text" autocomplete="username" required><label for="gap">Admin password</label><input id="gap" type="password" autocomplete="current-password" required><div class="acts"><button class="btn fill" type="submit">Log in as admin</button></div></form></div>
+    <div id="gV-alogin" class="hidden"><p>Admin login.</p><form id="fAdmin"><label for="gau">Admin email</label><input id="gau" type="email" autocomplete="username" required><label for="gap">Admin password</label><input id="gap" type="password" autocomplete="current-password" required><div class="acts"><button class="btn fill" type="submit">Log in as admin</button></div></form></div>
     <div id="gV-asetup" class="hidden"><p>Create the admin username and password only you will use.</p><form id="fASetup"><label for="gcu">Admin username</label><input id="gcu" type="text" autocomplete="username" required><label for="gcp">Password (at least 8 characters)</label><input id="gcp" type="password" autocomplete="new-password" required><label for="gcp2">Repeat password</label><input id="gcp2" type="password" autocomplete="new-password" required><div class="acts"><button class="btn fill" type="submit">Create admin account</button></div></form></div>
     <div class="msg" id="gMsg" role="status"></div>
     <div class="lnks"><button class="lnk" type="button" data-go="alogin">Admin login</button><button class="lnk hidden" id="gBack" type="button" data-go="login">Back to visitor login</button></div>
@@ -190,25 +190,23 @@
 
 <div id="adm" role="dialog" aria-modal="true" aria-label="Admin">
     <div class="box">
-        <div id="vSetup" class="hidden"><h3>Create admin account</h3><p>First time here. Choose the username and password only you will use.</p>
+        <div id="vSetup" class="hidden"><h3>Admin</h3><p>Admin accounts are managed in Supabase.</p>
             <label for="su">Username</label><input id="su" autocomplete="username">
             <label for="sp">Password (at least 8 characters)</label><input id="sp" type="password" autocomplete="new-password">
             <label for="sp2">Repeat password</label><input id="sp2" type="password" autocomplete="new-password">
             <div class="acts"><button class="btn fill" id="bSetup" type="button">Create admin</button><button class="btn" data-close type="button">Cancel</button></div></div>
         <div id="vLogin" class="hidden"><h3>Admin login</h3><p>Log in to add or remove your photos and videos.</p>
-            <label for="lu">Username</label><input id="lu" autocomplete="username">
+            <label for="lu">Email</label><input id="lu" type="email" autocomplete="username">
             <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password">
             <div class="acts"><button class="btn fill" id="bLogin" type="button">Log in</button><button class="btn" data-close type="button">Cancel</button></div></div>
-        <div id="vPanel" class="hidden"><h3>Add to gallery</h3><p>Choose photos or videos from your device. They appear in the gallery right away.</p>
+        <div id="vPanel" class="hidden"><h3>Add to gallery</h3><p>Choose photos or videos from your device. They upload online and appear on every device.</p>
             <label for="af">Files</label><input id="af" type="file" accept="image/*,video/*" multiple>
             <label for="at">Title</label><input id="at" placeholder="Leave blank to use the file name">
             <label for="ad">Date or note</label><input id="ad" placeholder="e.g. November 2026">
             <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div>
-            <div class="sec"><h4>Edit the site</h4><p>You can edit everything: text, links and every gallery item (use the pencil on a card). Edits show on this device. To show them to everyone, download content.json and upload it to GitHub next to index.html.</p>
-                <div class="acts"><button class="btn" id="bEdit" type="button">Edit text &amp; links</button><button class="btn" id="bAddFile" type="button">Add file from GitHub</button><button class="btn" id="bExport" type="button">Download content.json</button><button class="btn" id="bReset" type="button">Reset my edits</button></div></div>
-            <div class="sec hidden" id="aLock"><h4>Make this the only admin</h4><p>Right now anyone could create an admin on their own device. Replace the line starting with <b>var ADMIN=</b> in <b>index.html</b> with this line, then upload the file to GitHub. After that, nobody else can create an admin.</p>
-                <textarea id="aCode" readonly rows="3" aria-label="Line to paste into index.html"></textarea>
-                <div class="acts"><button class="btn" id="aCopy" type="button">Copy line</button></div></div></div>
+            <div class="sec"><h4>Edit the site</h4><p>You can edit everything: text, links and every gallery item (use the pencil on a card). Changes are saved online and show on all devices.</p>
+                <div class="acts"><button class="btn" id="bEdit" type="button">Edit text &amp; links</button><button class="btn" id="bAddFile" type="button">Add file from GitHub</button><button class="btn" id="bExport" type="button">Download content.json</button></div></div>
+            <div class="sec hidden" id="aLock"><h4>Make this the only admin</h4><textarea id="aCode" readonly rows="3" aria-label="Unused"></textarea></div></div>
         <div id="vEdit" class="hidden"><h3>Edit site text and links</h3>
             <label for="e_first">First name(s)</label><input id="e_first"><label for="e_last">Last name</label><input id="e_last">
             <label for="e_roles">Roles (one per line, shown in the typing line)</label><textarea id="e_roles" rows="4"></textarea>
@@ -225,7 +223,7 @@
             <label for="e_l3">Top social link: TikTok</label><input id="e_l3" type="url">
             <label for="e_l4">Top social link: Facebook</label><input id="e_l4" type="url">
             <div class="acts"><button class="btn fill" id="bEditSave" type="button">Save changes</button><button class="btn" id="bEditBack" type="button">Back</button></div></div>
-        <div id="vItem" class="hidden"><h3 id="iTitleH">Edit item</h3><p>The file path is where the file sits in your GitHub repo, for example photos/photo40.jpg.</p>
+        <div id="vItem" class="hidden"><h3 id="iTitleH">Edit item</h3><p>The file path is where the file sits in your GitHub repo (for example photos/photo40.jpg), or a full https link for files uploaded online.</p>
             <label for="i_src">File path</label><input id="i_src">
             <label for="i_cat">Category</label><select id="i_cat"><option>Photography</option><option>Videos</option></select>
             <label for="i_title">Title</label><input id="i_title">
@@ -236,10 +234,18 @@
 
 <script>
     var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // One admin only. Leave h empty to create the admin; then paste the line the panel gives you. After that nobody can create another admin.
-    var ADMIN={s:"acufl5gclnjmw4ymnvn",u:"reily",h:"d6d14add295708ff50d87b532134510f323d9326e46bd37070dabaa853d8843e"};
-    // Fresh start: remove data saved by the previous version (old admin, edits, viewer accounts, uploads)
-    try{["folio_admin","folio_viewers","folio_content","folio_gate_acct"].forEach(function(k){localStorage.removeItem(k)});["folio_in","folio_gate"].forEach(function(k){sessionStorage.removeItem(k)});indexedDB.deleteDatabase("folio")}catch(e){}
+
+    // ===== Supabase (online storage so every device sees the same site) =====
+    var ADMIN={h:"x"};
+    var SB_URL="https://YOURPROJECT.supabase.co",SB_KEY="YOUR_ANON_KEY",TOK=null;
+    try{TOK=sessionStorage.getItem("sb_tok")}catch(e){}
+    function sbH(x){var h={apikey:SB_KEY,Authorization:"Bearer "+(TOK||SB_KEY)};for(var k in x)h[k]=x[k];return h}
+    function sbLogin(email,pw){return fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pw})}).then(function(r){return r.json()}).then(function(j){if(!j.access_token)throw 0;TOK=j.access_token;try{sessionStorage.setItem("sb_tok",TOK)}catch(e){}})}
+    function sbSave(){if(!TOK)return Promise.reject();return fetch(SB_URL+"/rest/v1/site",{method:"POST",headers:sbH({"Content-Type":"application/json",Prefer:"resolution=merge-duplicates"}),body:JSON.stringify({id:"content",data:C})}).then(function(r){if(!r.ok)throw 0})}
+    function sbUpload(f){var n=Date.now()+"-"+f.name.replace(/[^\w.-]/g,"_");return fetch(SB_URL+"/storage/v1/object/media/"+n,{method:"POST",headers:sbH({"Content-Type":f.type||"application/octet-stream"}),body:f}).then(function(r){if(!r.ok)throw 0;return SB_URL+"/storage/v1/object/public/media/"+n})}
+
+    // Clean up data saved by older versions
+    try{["folio_admin","folio_viewers","folio_content","folio_gate_acct","folio2_admin","folio2_content"].forEach(function(k){localStorage.removeItem(k)});["folio_in","folio_gate","folio2_in"].forEach(function(k){sessionStorage.removeItem(k)});indexedDB.deleteDatabase("folio");indexedDB.deleteDatabase("folio2")}catch(e){}
     function P(n,t,c,m){return{src:"photos/photo"+n+".jpg",title:t,cat:c,meta:m}}
     function V(n,t,c,m){return{type:"video",src:"photos/"+n+".mp4",poster:"photos/"+n+".jpg",title:t,cat:c,meta:m}}
     var STATIC=[
@@ -247,9 +253,6 @@
         P(9,"Emilia Asiana Doesnt","Photography","October 2025"),P(10,"Franzcheska Cesas","Photography","February 2026"),P(11,"Gel Jimenez","Photography","December 2025"),P(12,"Sheena Andrada","Photography","March 2025"),
         P(13,"Sheena Andrada","Photography","May 2025"),P(14,"Marco Aurelio Avile Leon","Photography","March 2026"),P(15,"Kenard Marquez","Photography","February 2026"),P(16,"Photo","Photography","February 2026"),
         P(17,"Sofia Trazona","Photography","May 2026"),P(18,"Photo","Photography","February 2026"),P(19,"Loue Slao","Photography","September 2025"),P(20,"Sidney Flores","Photography","June 2025"),
-
-
-
         V("bts1","BTS Anton Vinzon","Videos","February 2026"),V("bts2","BTS Marco Masa","Videos","December 2025"),V("bts3","BTS Ashley Sarmiento","Videos","May 2026"),
         V("singing2","Passenger Seat Cover","Videos","September 2026"),V("dancing1","Stickwitu Dance Choreo","Videos","July 2026"),V("dancing2","Dance Choreo","Videos","September 2026"),V("dancing3","Rich Man Dance Choreo","Videos","June 2026")
     ];
@@ -268,15 +271,6 @@
         var r=0,i=0,del=false;(function tick(){var w=R()[r%R().length];t.textContent=w.slice(0,i);
             if(!del&&i<w.length){i++;setTimeout(tick,90)}else if(!del){del=true;setTimeout(tick,1300)}else if(i>0){i--;setTimeout(tick,45)}else{del=false;r=(r+1)%R().length;setTimeout(tick,250)}})()})();
 
-    // ===== Local (admin) storage in IndexedDB =====
-    var DB=null;
-    function openDB(){return new Promise(function(res){
-        try{var q=indexedDB.open("folio2",1);q.onupgradeneeded=function(){q.result.createObjectStore("items",{keyPath:"id",autoIncrement:true})};
-            q.onsuccess=function(){DB=q.result;res(DB)};q.onerror=function(){res(null)}}catch(e){res(null)}})}
-    function dbAll(){return new Promise(function(res){if(!DB)return res([]);var r=DB.transaction("items").objectStore("items").getAll();r.onsuccess=function(){res(r.result||[])};r.onerror=function(){res([])}})}
-    function dbPut(v){return new Promise(function(res,rej){var t=DB.transaction("items","readwrite");t.objectStore("items").add(v);t.oncomplete=res;t.onerror=rej})}
-    function dbDel(id){return new Promise(function(res){var t=DB.transaction("items","readwrite");t.objectStore("items").delete(id);t.oncomplete=res})}
-
     // ===== Gallery =====
     var ITEMS=[],grid=document.getElementById("grid"),flt=document.getElementById("flt"),curCat="Photography";
     ["Photography","Videos"].forEach(function(c,i){var b=el("button","",c);b.type="button";b.className=i?"":"on";b.setAttribute("aria-pressed",i?"false":"true");
@@ -288,7 +282,7 @@
         e.addEventListener("pointerenter",function(){r=e.getBoundingClientRect()});
         e.addEventListener("pointerleave",function(){e.style.setProperty("--rx","0deg");e.style.setProperty("--ry","0deg")})}
     function thumb(it){
-        if(it.type==="video"&&it.local)return '<video src="'+it.url+'#t=0.1" muted playsinline preload="metadata"></video>';
+        if(it.type==="video"&&(it.local||!it.poster))return '<video src="'+(it.local?it.url:it.src)+'#t=0.1" muted playsinline preload="metadata"></video>';
         var s=it.type==="video"?it.poster:(it.local?it.url:it.src);
         return s?'<img src="'+s+'" alt="'+esc(it.title)+'" loading="lazy">':''}
     function render(){
@@ -296,16 +290,11 @@
         ITEMS.forEach(function(it,i){var b=el("button","card"+(it.local?" mine":""));b.type="button";b.dataset.cat=it.cat;b.setAttribute("aria-label","Open "+it.title);
             b.innerHTML=thumb(it)+(it.type==="video"?'<span class="play" aria-hidden="true"></span>':'')+(it.local?'<span class="mine-badge">Yours</span>':'')+'<span class="cap"><b>'+esc(it.title)+'</b><span>'+esc(it.cat)+(it.meta?" · "+esc(it.meta):"")+'</span></span>';
             var im=b.querySelector("img");if(im)im.addEventListener("error",function(){this.style.display="none"});
-            if(it.local){var d=el("span","del","&times;");d.setAttribute("role","button");d.setAttribute("aria-label","Delete "+it.title);d.tabIndex=0;
-                var go=function(ev){ev.stopPropagation();if(confirm("Delete “"+it.title+"”?"))dbDel(it.id).then(load)};
-                d.onclick=go;d.onkeydown=function(ev){if(ev.key==="Enter")go(ev)};b.appendChild(d)}else{var e2=el("span","edt","&#9998;");e2.setAttribute("role","button");e2.setAttribute("aria-label","Edit "+it.title);e2.tabIndex=0;var ed=function(ev){ev.stopPropagation();openItem(C.gallery.indexOf(it))};e2.onclick=ed;e2.onkeydown=function(ev){if(ev.key==="Enter")ed(ev)};b.appendChild(e2)}
+            var e2=el("span","edt","&#9998;");e2.setAttribute("role","button");e2.setAttribute("aria-label","Edit "+it.title);e2.tabIndex=0;var ed=function(ev){ev.stopPropagation();openItem(C.gallery.indexOf(it))};e2.onclick=ed;e2.onkeydown=function(ev){if(ev.key==="Enter")ed(ev)};b.appendChild(e2);
             b.onclick=function(){openLb(i)};tilt(b,14);grid.appendChild(b)});
         grid.appendChild(el("p","empty hide","Nothing in this category yet."));
         applyFilter();buildRing()}
-    function load(){dbAll().then(function(rows){
-        ITEMS.forEach(function(x){if(x.url)URL.revokeObjectURL(x.url)});
-        var local=rows.map(function(r){return{id:r.id,local:true,type:r.kind==="video"?"video":"",url:URL.createObjectURL(r.blob),title:r.title,cat:r.kind==="video"?"Videos":"Photography",meta:r.meta}}).reverse();
-        ITEMS=local.concat(C.gallery);render()})}
+    function load(){ITEMS=C.gallery;render()}
 
     // 3D ring (hero)
     function buildRing(){var ring=document.getElementById("ring");ring.innerHTML="";
@@ -337,29 +326,22 @@
     // ===== Admin =====
     var adm=document.getElementById("adm"),msg=document.getElementById("msg");
     function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
-    function view(n){["vSetup","vLogin","vPanel","vEdit","vItem"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("");if(n==="vPanel")showLock()}
+    function view(n){["vSetup","vLogin","vPanel","vEdit","vItem"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("")}
     function sha(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",b).then(function(h){return[].map.call(new Uint8Array(h),function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
     function hashPw(u,p,salt){return sha(salt+"|"+u.toLowerCase()+"|"+p)}
-    function getAcct(){if(ADMIN.h)return{u:ADMIN.u,s:ADMIN.s,h:ADMIN.h};try{return JSON.parse(localStorage.getItem("folio2_admin")||"null")}catch(e){return null}}
-    function setAdmin(on){document.body.classList.toggle("admin",on);try{on?sessionStorage.setItem("folio2_in","1"):sessionStorage.removeItem("folio2_in")}catch(e){}}
+    function getAcct(){return{u:"admin"}}
+    function setAdmin(on){document.body.classList.toggle("admin",on);if(!on){TOK=null;try{sessionStorage.removeItem("sb_tok")}catch(e){}}}
     function openAdm(){lastF=document.activeElement;adm.classList.add("open");
-        if(!window.crypto||!crypto.subtle){view("vLogin");say("Admin needs a secure (https) page. Open the published site, not a local file.");return}
-        view(document.body.classList.contains("admin")?"vPanel":(getAcct()?"vLogin":"vSetup"));
+        view(document.body.classList.contains("admin")?"vPanel":"vLogin");
         var f=adm.querySelector(".box>div:not(.hidden) input");if(f)f.focus()}
     function closeAdm(){adm.classList.remove("open");if(lastF&&lastF.focus)lastF.focus()}
     document.getElementById("admOpen").onclick=openAdm;
     [].forEach.call(adm.querySelectorAll("[data-close]"),function(b){b.onclick=closeAdm});
     adm.addEventListener("click",function(e){if(e.target===adm)closeAdm()});
-    document.getElementById("bSetup").onclick=function(){
-        if(ADMIN.h)return say("An admin already exists.");
-        var u=document.getElementById("su").value.trim(),p=document.getElementById("sp").value,p2=document.getElementById("sp2").value;
-        if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
-        var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-        hashPw(u,p,salt).then(function(h){localStorage.setItem("folio2_admin",JSON.stringify({u:u.toLowerCase(),s:salt,h:h}));setAdmin(true);view("vPanel");say("Admin created. You’re logged in.",true)})};
+    document.getElementById("bSetup").onclick=function(){say("Admin accounts are created in Supabase (Authentication → Users).")};
     document.getElementById("bLogin").onclick=function(){
-        var a=getAcct(),u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value;
-        if(!a)return view("vSetup");
-        hashPw(u,p,a.s).then(function(h){if(u.toLowerCase()===a.u&&h===a.h){setAdmin(true);document.getElementById("lp").value="";view("vPanel")}else say("Wrong username or password.")})};
+        sbLogin(document.getElementById("lu").value.trim(),document.getElementById("lp").value)
+            .then(function(){setAdmin(true);document.getElementById("lp").value="";view("vPanel")}).catch(function(){say("Wrong email or password.")})};
     document.getElementById("bOut").onclick=function(){setAdmin(false);closeAdm()};
     function shrink(file){return new Promise(function(res){
         var u=URL.createObjectURL(file),im=new Image();
@@ -367,28 +349,25 @@
             c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){res(b||file)},"image/jpeg",.88)};
         im.onerror=function(){URL.revokeObjectURL(u);res(file)};im.src=u})}
     document.getElementById("bAdd").onclick=function(){
-        if(!document.body.classList.contains("admin"))return say("Log in first.");
-        if(!DB)return say("This browser can’t store files here. Try a different browser or turn off private mode.");
+        if(!TOK)return say("Log in first.");
         var files=[].slice.call(document.getElementById("af").files);if(!files.length)return say("Choose at least one photo or video.");
-        var title=document.getElementById("at").value.trim(),meta=document.getElementById("ad").value.trim(),done=0;
-        say("Adding…",true);
-        files.reduce(function(chain,f){return chain.then(function(){
+        var title=document.getElementById("at").value.trim(),meta=document.getElementById("ad").value.trim(),done=0;say("Uploading…",true);
+        files.reduce(function(ch,f){return ch.then(function(){
             var vid=f.type.indexOf("video")===0;if(!vid&&f.type.indexOf("image")!==0)return;
-            return(vid?Promise.resolve(f):shrink(f)).then(function(b){return dbPut({kind:vid?"video":"image",blob:b,title:title||f.name.replace(/\.[^.]+$/,""),cat:vid?"Videos":"Photography",meta:meta})}).then(function(){done++})})},Promise.resolve())
-            .then(function(){document.getElementById("af").value="";document.getElementById("at").value="";load();say(done+" added to the gallery.",true)})
-            .catch(function(){say("Couldn’t save a file. It may be too large for this browser’s storage.")})};
-
-    function showLock(){var a=getAcct(),box=document.getElementById("aLock");
-        if(!ADMIN.h&&a){document.getElementById("aCode").value='var ADMIN={s:"'+a.s+'",u:'+JSON.stringify(a.u)+',h:"'+a.h+'"};';box.classList.remove("hidden")}else box.classList.add("hidden")}
-    document.getElementById("aCopy").onclick=function(){var t=document.getElementById("aCode");t.select();try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand("copy")}this.textContent="Copied"};
+            return(vid?Promise.resolve(f):shrink(f)).then(function(b){return sbUpload(vid?f:new File([b],f.name.replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg"}))})
+                .then(function(url){C.gallery.unshift({type:vid?"video":"",src:url,poster:"",title:title||f.name.replace(/\.[^.]+$/,""),cat:vid?"Videos":"Photography",meta:meta});done++})})},Promise.resolve())
+            .then(sbSave).then(function(){document.getElementById("af").value="";document.getElementById("at").value="";load();say(done+" added. Visible on all devices.",true)})
+            .catch(function(){say("Upload failed. Log in again, or the file is too large (free limit is 50 MB per file).")})};
 
     // ===== Site content (admin can edit everything) =====
     function $(id){return document.getElementById(id)}
-    function save(){try{localStorage.setItem("folio2_content",JSON.stringify(C))}catch(e){}}
-    function initContent(){var loc=null;try{loc=JSON.parse(localStorage.getItem("folio2_content")||"null")}catch(e){}
-        function use(j){if(j&&j.site&&Array.isArray(j.gallery)){j.site=Object.assign({},DEF.site,j.site);j.site.links=Object.assign({},DEF.site.links,j.site.links);C=j}}
-        if(loc){use(loc);return Promise.resolve()}
-        return fetch("content.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(use).catch(function(){})}
+    function save(){sbSave().catch(function(){say("Not saved online. Log in again (session expired).")})}
+    function initContent(){
+        function use(j){if(j&&j.site&&Array.isArray(j.gallery)){j.site=Object.assign({},DEF.site,j.site);j.site.links=Object.assign({},DEF.site.links,j.site.links);C=j;return true}}
+        return fetch(SB_URL+"/rest/v1/site?id=eq.content&select=data",{headers:{apikey:SB_KEY},cache:"no-store"})
+            .then(function(r){return r.json()})
+            .then(function(a){if(a[0]&&use(a[0].data))return;throw 0})
+            .catch(function(){return fetch("content.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(use).catch(function(){})})}
     function T(id,t){var e=$(id);if(e)e.textContent=t}
     function safeUrl(u){return/^https?:\/\//i.test(u)?u:"#"}
     function applySite(){var s=C.site,L=s.links,nm=s.first+" "+s.last;
@@ -412,19 +391,19 @@
     $("iBack").onclick=closeAdm;
     $("iSave").onclick=function(){var src=$("i_src").value.trim(),cat=$("i_cat").value;
         if(!src||src==="photos/")return say("Enter the file path, for example photos/photo40.jpg.");
+        var old=editIdx<0?null:C.gallery[editIdx];
         var it={src:src,title:$("i_title").value.trim()||"Untitled",cat:cat,meta:$("i_meta").value.trim()};
-        if(cat==="Videos"){it.type="video";it.poster=src.replace(/\.[^.\/]+$/,".jpg")}
+        if(cat==="Videos"){it.type="video";it.poster=(old&&old.src===src&&old.poster!=null)?old.poster:(/^https?:/i.test(src)?"":src.replace(/\.[^.\/]+$/,".jpg"))}
         if(editIdx<0)C.gallery.push(it);else C.gallery[editIdx]=it;
         save();load();closeAdm()};
-    $("iDel").onclick=function(){if(confirm("Remove this item from the gallery? The file stays in your photos folder on GitHub.")){C.gallery.splice(editIdx,1);save();load();closeAdm()}};
+    $("iDel").onclick=function(){if(confirm("Remove this item from the gallery? Files already uploaded stay in storage.")){C.gallery.splice(editIdx,1);save();load();closeAdm()}};
     $("bExport").onclick=function(){var b=new Blob([JSON.stringify(C,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="content.json";document.body.appendChild(a);a.click();a.remove();
-        say("Downloaded content.json. Upload it to GitHub next to index.html to show your edits to everyone.",true)};
-    $("bReset").onclick=function(){if(confirm("Discard the edits saved in this browser and go back to the published version?")){try{localStorage.removeItem("folio2_content")}catch(e){}location.reload()}};
+        say("Downloaded a backup copy of content.json.",true)};
 
-    try{if(sessionStorage.getItem("folio2_in")&&getAcct())document.body.classList.add("admin")}catch(e){}
-    initContent().then(openDB).then(function(){applySite();ITEMS=C.gallery;render();load()});
+    if(TOK)document.body.classList.add("admin");
+    initContent().then(function(){applySite();ITEMS=C.gallery;render()});
 
-    // ===== Front door: visitors create an account; admin logs in with the admin account =====
+    // ===== Front door: visitors create an account; admin logs in with the Supabase admin account =====
     (function(){var g=document.getElementById("gate"),msg=document.getElementById("gMsg"),secure=window.crypto&&crypto.subtle;
         function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
         function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio2_gate","1")}catch(e){}}
@@ -435,7 +414,7 @@
             document.getElementById("gBack").classList.toggle("hidden",n!=="alogin"&&n!=="asetup");
             [].forEach.call(document.querySelectorAll('.lnks [data-go="alogin"]'),function(b){b.classList.toggle("hidden",n==="alogin"||n==="asetup")});
             say(note||"",!!note);var f=document.querySelector("#gV-"+n+" input");if(f)f.focus()}
-        [].forEach.call(document.querySelectorAll("[data-go]"),function(b){b.onclick=function(){var t=b.dataset.go;go(t==="alogin"&&!getAcct()?"asetup":t)}});
+        [].forEach.call(document.querySelectorAll("[data-go]"),function(b){b.onclick=function(){go(b.dataset.go)}});
         function ok(){if(secure)return true;say("Login needs a secure (https) page.");return false}
         document.getElementById("fSignup").onsubmit=function(e){e.preventDefault();if(!ok())return;
             var u=val("gsu").trim().toLowerCase(),p=val("gsp"),p2=val("gsp2"),list=viewers();
@@ -448,13 +427,8 @@
             function bad(){say("Wrong username or password.");document.getElementById("glp").value=""}
             if(!acct)return bad();hashPw(u,p,acct.s).then(function(h){h===acct.h?open():bad()})};
         document.getElementById("fAdmin").onsubmit=function(e){e.preventDefault();if(!ok())return;
-            var u=val("gau").trim().toLowerCase(),p=val("gap"),a=getAcct();if(!a)return go("asetup");
-            hashPw(u,p,a.s).then(function(h){if(u===a.u&&h===a.h){setAdmin(true);open()}else{say("Wrong admin username or password.");document.getElementById("gap").value=""}})};
-        document.getElementById("fASetup").onsubmit=function(e){e.preventDefault();if(!ok())return;if(ADMIN.h)return say("An admin already exists.");
-            var u=val("gcu").trim().toLowerCase(),p=val("gcp"),p2=val("gcp2");
-            if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
-            var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
-            hashPw(u,p,salt).then(function(h){try{localStorage.setItem("folio2_admin",JSON.stringify({u:u,s:salt,h:h}))}catch(x){}go("alogin","Admin created. Now log in as admin.")})};
+            sbLogin(val("gau").trim(),val("gap")).then(function(){setAdmin(true);open()}).catch(function(){say("Wrong admin email or password.");document.getElementById("gap").value=""})};
+        document.getElementById("fASetup").onsubmit=function(e){e.preventDefault();say("Admin accounts are created in Supabase (Authentication → Users).")};
         go(viewers().length?"login":"signup")})();
 </script>
 </body>
