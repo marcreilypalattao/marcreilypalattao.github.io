@@ -205,7 +205,10 @@
             <label for="ad">Date or note</label><input id="ad" placeholder="e.g. November 2026">
             <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div>
             <div class="sec"><h4>Edit the site</h4><p>You can edit everything: text, links and every gallery item (use the pencil on a card). Edits show on this device. To show them to everyone, download content.json and upload it to GitHub next to index.html.</p>
-                <div class="acts"><button class="btn" id="bEdit" type="button">Edit text &amp; links</button><button class="btn" id="bAddFile" type="button">Add file from GitHub</button><button class="btn" id="bExport" type="button">Download content.json</button><button class="btn" id="bReset" type="button">Reset my edits</button></div></div></div>
+                <div class="acts"><button class="btn" id="bEdit" type="button">Edit text &amp; links</button><button class="btn" id="bAddFile" type="button">Add file from GitHub</button><button class="btn" id="bExport" type="button">Download content.json</button><button class="btn" id="bReset" type="button">Reset my edits</button></div></div>
+            <div class="sec hidden" id="aLock"><h4>Make this the only admin</h4><p>Right now anyone could create an admin on their own device. Replace the line starting with <b>var ADMIN=</b> in <b>index.html</b> with this line, then upload the file to GitHub. After that, nobody else can create an admin.</p>
+                <textarea id="aCode" readonly rows="3" aria-label="Line to paste into index.html"></textarea>
+                <div class="acts"><button class="btn" id="aCopy" type="button">Copy line</button></div></div></div>
         <div id="vEdit" class="hidden"><h3>Edit site text and links</h3>
             <label for="e_first">First name(s)</label><input id="e_first"><label for="e_last">Last name</label><input id="e_last">
             <label for="e_roles">Roles (one per line, shown in the typing line)</label><textarea id="e_roles" rows="4"></textarea>
@@ -233,6 +236,8 @@
 
 <script>
     var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // One admin only. Leave h empty to create the admin; then paste the line the panel gives you. After that nobody can create another admin.
+    var ADMIN={s:"adm-v1",u:"",h:""};
     function P(n,t,c,m){return{src:"photos/photo"+n+".jpg",title:t,cat:c,meta:m}}
     function V(n,t,c,m){return{type:"video",src:"photos/"+n+".mp4",poster:"photos/"+n+".jpg",title:t,cat:c,meta:m}}
     var STATIC=[
@@ -330,10 +335,10 @@
     // ===== Admin =====
     var adm=document.getElementById("adm"),msg=document.getElementById("msg");
     function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
-    function view(n){["vSetup","vLogin","vPanel","vEdit","vItem"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("")}
+    function view(n){["vSetup","vLogin","vPanel","vEdit","vItem"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("");if(n==="vPanel")showLock()}
     function sha(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",b).then(function(h){return[].map.call(new Uint8Array(h),function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
     function hashPw(u,p,salt){return sha(salt+"|"+u.toLowerCase()+"|"+p)}
-    function getAcct(){try{return JSON.parse(localStorage.getItem("folio_admin")||"null")}catch(e){return null}}
+    function getAcct(){if(ADMIN.h)return{u:ADMIN.u,s:ADMIN.s,h:ADMIN.h};try{return JSON.parse(localStorage.getItem("folio_admin")||"null")}catch(e){return null}}
     function setAdmin(on){document.body.classList.toggle("admin",on);try{on?sessionStorage.setItem("folio_in","1"):sessionStorage.removeItem("folio_in")}catch(e){}}
     function openAdm(){lastF=document.activeElement;adm.classList.add("open");
         if(!window.crypto||!crypto.subtle){view("vLogin");say("Admin needs a secure (https) page. Open the published site, not a local file.");return}
@@ -344,6 +349,7 @@
     [].forEach.call(adm.querySelectorAll("[data-close]"),function(b){b.onclick=closeAdm});
     adm.addEventListener("click",function(e){if(e.target===adm)closeAdm()});
     document.getElementById("bSetup").onclick=function(){
+        if(ADMIN.h)return say("An admin already exists.");
         var u=document.getElementById("su").value.trim(),p=document.getElementById("sp").value,p2=document.getElementById("sp2").value;
         if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
         var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
@@ -369,6 +375,10 @@
             return(vid?Promise.resolve(f):shrink(f)).then(function(b){return dbPut({kind:vid?"video":"image",blob:b,title:title||f.name.replace(/\.[^.]+$/,""),cat:vid?"Videos":"Photography",meta:meta})}).then(function(){done++})})},Promise.resolve())
             .then(function(){document.getElementById("af").value="";document.getElementById("at").value="";load();say(done+" added to the gallery.",true)})
             .catch(function(){say("Couldn’t save a file. It may be too large for this browser’s storage.")})};
+
+    function showLock(){var a=getAcct(),box=document.getElementById("aLock");
+        if(!ADMIN.h&&a){document.getElementById("aCode").value='var ADMIN={s:"'+a.s+'",u:'+JSON.stringify(a.u)+',h:"'+a.h+'"};';box.classList.remove("hidden")}else box.classList.add("hidden")}
+    document.getElementById("aCopy").onclick=function(){var t=document.getElementById("aCode");t.select();try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand("copy")}this.textContent="Copied"};
 
     // ===== Site content (admin can edit everything) =====
     function $(id){return document.getElementById(id)}
@@ -438,7 +448,7 @@
         document.getElementById("fAdmin").onsubmit=function(e){e.preventDefault();if(!ok())return;
             var u=val("gau").trim().toLowerCase(),p=val("gap"),a=getAcct();if(!a)return go("asetup");
             hashPw(u,p,a.s).then(function(h){if(u===a.u&&h===a.h){setAdmin(true);open()}else{say("Wrong admin username or password.");document.getElementById("gap").value=""}})};
-        document.getElementById("fASetup").onsubmit=function(e){e.preventDefault();if(!ok())return;
+        document.getElementById("fASetup").onsubmit=function(e){e.preventDefault();if(!ok())return;if(ADMIN.h)return say("An admin already exists.");
             var u=val("gcu").trim().toLowerCase(),p=val("gcp"),p2=val("gcp2");
             if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
             var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
