@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Marc Reily Palattao | Computer Engineering Portfolio</title>
+    <meta name="description" content="Marc Reily Palattao, a 4th-year Computer Engineering student at Cagayan State University (Carig). Skills, projects, education and certificates.">
+    <meta name="theme-color" content="#0b0f17">
+    <link rel="icon" type="image/jpeg" href="MYPHOTO2.jpg">
+    <link rel="apple-touch-icon" href="MYPHOTO.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.dataset.theme=t}catch(e){}</script>
+    <noscript><style>.rv{opacity:1!important;transform:none!important}</style></noscript>
+    <style>
+        :root{--bg:#0b0f17;--s1:#111826;--s2:#172033;--line:#243049;--tx:#e8eef9;--mut:#9aa8c2;--ac:#38bdf8;--ac2:#fbbf24;--on:#06202c;--sh:0 20px 50px rgba(0,0,0,.35);--mono:"JetBrains Mono",ui-monospace,Consolas,Menlo,monospace;color-scheme:dark}
+        :root[data-theme=light]{--bg:#f6f8fc;--s1:#fff;--s2:#eef2f8;--line:#dbe3ef;--tx:#0f172a;--mut:#475569;--ac:#0369a1;--ac2:#b45309;--on:#fff;--sh:0 20px 50px rgba(15,23,42,.1);color-scheme:light}
+        *{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth;scroll-padding-top:76px}
+        body{font:400 1rem/1.65 "Inter",system-ui,sans-serif;background-color:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;background-repeat:no-repeat;background-image:radial-gradient(60% 420px at 12% 0,color-mix(in srgb,var(--ac) 16%,transparent),transparent),radial-gradient(40% 360px at 92% 6%,color-mix(in srgb,var(--ac2) 10%,transparent),transparent)}
+        a{color:var(--ac)}
+        img{max-width:100%;display:block}
+        ul,ol{list-style:none}
+        :focus-visible{outline:3px solid var(--ac2);outline-offset:3px;border-radius:4px}
+        .wrap{width:min(1120px,100% - 48px);margin:0 auto}
+        .skip{position:absolute;left:12px;top:-64px;z-index:100;background:var(--ac);color:var(--on);padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+        .skip:focus{top:12px}
+        .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+        .prog{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;background:linear-gradient(90deg,var(--ac),var(--ac2))}
+
+        /* Header */
+        .hdr{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+        .bar{display:flex;align-items:center;gap:10px;height:64px}
+        .logo{font:700 1rem var(--mono);color:var(--tx);text-decoration:none;margin-right:auto}
+        .logo span{color:var(--ac2)}
+        #nav{display:flex;gap:2px}
+        #nav a{padding:8px 12px;border-radius:8px;color:var(--mut);text-decoration:none;font-size:.92rem;font-weight:500}
+        #nav a:hover{color:var(--tx);background:var(--s2)}
+        #nav a[aria-current=true]{color:var(--ac);background:var(--s2)}
+        .ib{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);background:var(--s1);color:var(--tx);border-radius:10px;cursor:pointer}
+        .ib:hover{border-color:var(--ac)}
+        .ib svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+        .mn{display:none}
+
+        /* Hero */
+        .hg{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;padding:72px 0 56px}
+        .eyebrow{font:600 .8rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ac2);margin-bottom:10px}
+        h1{font-size:clamp(2.3rem,5.4vw,3.8rem);font-weight:800;line-height:1.08;letter-spacing:-.03em}
+        .nm{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+        .role{margin-top:14px;font:500 clamp(1.05rem,2.2vw,1.35rem) var(--mono);color:var(--ac2);min-height:1.7em}
+        .cur{display:inline-block;width:2px;height:1.1em;background:var(--ac2);margin-left:3px;vertical-align:-.15em;animation:bl 1s steps(2) infinite}
+        @keyframes bl{50%{opacity:0}}
+        .lead{margin-top:16px;color:var(--mut);font-size:1.1rem;max-width:52ch}
+        .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;border:1.5px solid var(--line);background:var(--s1);color:var(--tx);font-weight:600;text-decoration:none;transition:transform .15s,border-color .15s}
+        .btn:hover{transform:translateY(-2px);border-color:var(--ac)}
+        .btn.pri{background:var(--ac);color:var(--on);border-color:var(--ac)}
+        .btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+        .soc{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+        .soc a{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:42px;height:42px;padding:0 11px;border-radius:12px;border:1px solid var(--line);background:var(--s1);color:var(--tx);text-decoration:none;font-weight:600;font-size:.9rem}
+        .soc a:hover{border-color:var(--ac);color:var(--ac)}
+        .soc svg{width:18px;height:18px}
+        .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+        .stats li{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:12px 18px}
+        .stats b{display:block;font:800 1.6rem var(--mono);color:var(--ac);line-height:1.2}
+        .stats span{font-size:.82rem;color:var(--mut)}
+        .pw{position:relative;isolation:isolate;justify-self:center;width:min(380px,100%)}
+        .pw::before{content:"";position:absolute;inset:-14px 14px 14px -14px;border:2px solid var(--ac);border-radius:32px;opacity:.45;z-index:-1}
+        .ph{aspect-ratio:4/5;border-radius:28px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--sh);background:var(--s2)}
+        .ph img{width:100%;height:100%;object-fit:cover}
+        .snip{position:absolute;left:-26px;bottom:-22px;background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:12px 16px;font:500 .78rem/1.6 var(--mono);color:var(--mut);box-shadow:var(--sh)}
+        .snip i{font-style:normal;color:var(--ac)}.snip em{font-style:normal;color:var(--ac2)}
+
+        /* Sections */
+        .sec{padding:84px 0}
+        .sh{margin-bottom:34px}
+        h2{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.15}
+        h3{font-size:1.05rem}
+        .bx,.sk,.pj{background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:24px}
+        .bx h3,.sk h3{font:600 .8rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:12px}
+        .bx p{color:var(--mut)}
+        .bx.w2 p{color:var(--tx);font-size:1.08rem}
+        .bento{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .w2{grid-column:span 2}.w3{grid-column:1/-1}
+        .chips{display:flex;flex-wrap:wrap;gap:8px}
+        .chips li{padding:6px 13px;border-radius:999px;background:var(--s2);border:1px solid var(--line);font-size:.88rem}
+        .chips.ac li{border-color:var(--ac);color:var(--ac);font-weight:600}
+        .dots li{color:var(--mut)}.dots li::before{content:"▸ ";color:var(--ac2)}
+        .skg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .pjg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+        .pj{display:flex;flex-direction:column;gap:12px}
+        .pj p{color:var(--mut)}
+        .pj .chips{margin-top:auto}
+        .pj .lk{font-weight:600;text-decoration:none}.pj .lk:hover{text-decoration:underline}
+        .tl{position:relative;padding-left:30px}
+        .tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
+        .tl li{position:relative;background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-bottom:14px}
+        .tl li::before{content:"";position:absolute;left:-28px;top:26px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--ac)}
+        .tl li.now::before{background:var(--ac2);border-color:var(--ac2);box-shadow:0 0 0 5px color-mix(in srgb,var(--ac2) 25%,transparent)}
+        .tl time{font:500 .8rem var(--mono);color:var(--ac2)}
+        .tl h3{margin:2px 0}
+        .tl p,.lvl{color:var(--mut);font-size:.92rem}
+        .certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+        .cc{background:var(--s1);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+        .cc:hover{transform:translateY(-4px);border-color:var(--ac)}
+        .cc button{display:block;width:100%;border:0;padding:0;background:var(--s2);cursor:zoom-in}
+        .cc img{width:100%;aspect-ratio:4/3;object-fit:contain}
+        .cb{padding:16px 18px 20px}
+        .cb h3{font-size:.98rem;margin-bottom:6px}
+        .cb p{color:var(--mut);font-size:.86rem}
+        .cb time{display:block;margin-top:8px;font:500 .78rem var(--mono);color:var(--ac2)}
+        .ct{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;background:var(--s1);border:1px solid var(--line);border-radius:24px;padding:40px}
+        .cl{display:grid;gap:12px}
+        .cl li{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+        .cl span{font:600 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ac2);min-width:56px}
+        .cl a{flex:1;color:var(--tx);font-weight:600;text-decoration:none;word-break:break-all}
+        .cl a:hover{color:var(--ac)}
+        .cp{font:600 .78rem "Inter",sans-serif;padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:var(--s1);color:var(--tx);cursor:pointer}
+        .cp:hover{border-color:var(--ac)}
+        footer{padding:30px 0 40px;border-top:1px solid var(--line);color:var(--mut);font-size:.88rem}
+        .fw{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+        dialog{margin:auto;border:0;padding:16px;width:min(920px,94vw);max-height:92vh;overflow:auto;background:var(--s1);color:var(--tx);border-radius:18px;box-shadow:var(--sh)}
+        dialog::backdrop{background:rgba(0,0,0,.82)}
+        dialog img{margin:0 auto;max-height:68vh;object-fit:contain}
+        dialog figcaption{text-align:center;margin-top:12px;font-weight:600}
+        .dn{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+        .dn button,.x{font:600 .88rem "Inter",sans-serif;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--s2);color:var(--tx);cursor:pointer}
+        .dn button:hover,.x:hover{border-color:var(--ac)}
+        .x{position:absolute;top:12px;right:12px;width:40px;height:40px;padding:0;font-size:1.3rem;z-index:2}
+        .rv{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}
+        .rv.in{opacity:1;transform:none}
+
+        @media(max-width:900px){
+            .hg,.ct{grid-template-columns:1fr}
+            .pw{order:-1;width:min(300px,100%)}
+            .skg,.bento{grid-template-columns:1fr 1fr}
+            .w3{grid-column:1/-1}
+            .ct{padding:28px}
+        }
+        @media(max-width:860px){
+            .mn{display:grid}
+            #nav{display:none;position:absolute;left:0;right:0;top:64px;flex-direction:column;padding:12px 24px 16px;background:var(--s1);border-bottom:1px solid var(--line)}
+            #nav.open{display:flex}
+        }
+        @media(max-width:560px){
+            .skg,.bento{grid-template-columns:1fr}
+            .w2{grid-column:auto}
+            .snip{left:-6px}
+            .sec{padding:64px 0}
+        }
+        @media(prefers-reduced-motion:reduce){
+            html{scroll-behavior:auto}
+            .cur{animation:none}
+            .rv{opacity:1;transform:none;transition:none}
+            .btn,.cc{transition:none}
+        }
+    </style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="prog" id="prog" aria-hidden="true"></div>
+
+<header class="hdr">
+    <div class="wrap bar">
+        <a class="logo" href="#home" aria-label="Marc Reily Palattao, home"><span>&gt;_</span> Marc Reily</a>
+        <nav id="nav" aria-label="Main">
+            <a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#achievements">Achievements</a><a href="#contact">Contact</a>
+        </nav>
+        <button class="ib" id="theme" type="button" aria-label="Switch between light and dark theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+        <button class="ib mn" id="menu" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+</header>
+
+<main id="main">
+    <section id="home" aria-label="Introduction">
+        <div class="wrap hg">
+            <div>
+                <p class="eyebrow">Computer Engineering · 4th Year</p>
+                <h1>Hi, I’m <span class="nm">Marc Reily Palattao</span></h1>
+                <p class="role" aria-live="off"><span id="typed">Computer Engineering Student</span><i class="cur" aria-hidden="true"></i></p>
+                <p class="lead">Learn. Build. Improve. Repeat. I’m an approachable, cheerful student who enjoys solving problems and building things with code.</p>
+                <div class="cta">
+                    <a class="btn pri" href="cv.pdf" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>Download CV</a>
+                    <a class="btn" href="#contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Contact me</a>
+                </div>
+                <ul class="soc" id="follow" aria-label="Social links"></ul>
+                <ul class="stats" aria-label="Quick facts">
+                    <li class="rv"><b data-n="5">5</b><span>Certificates</span></li>
+                    <li class="rv"><b data-n="4">4</b><span>Programming languages</span></li>
+                    <li class="rv"><b data-n="1">1</b><span>OJT completed</span></li>
+                </ul>
+            </div>
+            <div class="pw">
+                <div class="ph"><img src="MYPHOTO2.jpg" alt="Photo of Marc Reily Palattao" width="380" height="475" onerror="this.onerror=null;this.src='profile.png'"></div>
+                <pre class="snip" aria-hidden="true"><code><i>const</i> marc = {
+  course: <em>"BS Computer Engineering"</em>,
+  school: <em>"CSU Carig"</em>,
+  year: <em>4</em>,
+};</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="about" aria-labelledby="t-about">
+        <div class="wrap">
+            <header class="sh rv"><p class="eyebrow">About</p><h2 id="t-about">A little about me</h2></header>
+            <div class="bento">
+                <article class="bx w2 rv"><h3>Bio</h3><p>Hi, I’m Marc Reily Palattao, a fourth-year student of the Computer Engineering Department at Cagayan State University (Carig Campus). Approachable, cheerful, witty, the one-call-away friend, and a gamer. I love BTS, and my bias is Kim Taehyung (V).</p></article>
+                <article class="bx rv"><h3>Career goal</h3><p>To become a successful Computer Engineer in the future.</p></article>
+                <article class="bx rv"><h3>Motto</h3><p>“Always Learning, Always Building, Always Improving.”</p></article>
+                <article class="bx rv"><h3>Location</h3><p>Callao Sur, Lasam, Cagayan</p></article>
+                <article class="bx rv"><h3>Hobbies</h3><ul class="chips"><li>Online games</li><li>Bonding with friends</li><li>Eating</li><li>Solving math problems</li><li>K-drama</li><li>K-pop music</li></ul></article>
+                <article class="bx w3 rv"><h3>Fun facts</h3><ul class="dots"><li>I enjoy solving math problems.</li><li>I’m a K-pop and K-drama enthusiast.</li><li>I game during my free time.</li></ul></article>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="skills" aria-labelledby="t-skills">
+        <div class="wrap">
+            <header class="sh rv"><p class="eyebrow">Skills</p><h2 id="t-skills">What I work with</h2></header>
+            <div class="skg">
+                <article class="sk rv"><h3>Programming</h3><ul class="chips ac"><li>Python</li><li>Java</li><li>C</li><li>C++</li></ul></article>
+                <article class="sk rv"><h3>Web</h3><ul class="chips ac"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Vue</li></ul></article>
+                <article class="sk rv"><h3>Soft skills</h3><ul class="chips"><li>Problem solving</li><li>Time management</li><li>Quick learning</li><li>Strong communication</li><li>Team collaboration</li><li>Analytical thinking</li></ul></article>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec" id="projects" aria-labelledby="t-projects">
+        <div class="wrap">
+            <header class="sh rv"><p class="eyebrow">Projects</p><h2 id="t-projects">Things I’ve built</h2></header>
+            <div class="pjg" id="pjg"></div>
+        </div>
+    </section>
+
+    <section class="sec" id="education" aria-labelledby="t-edu">
+        <div class="wrap">
+            <header class="sh rv"><p class="eyebrow">Education</p><h2 id="t-edu">Educational background</h2></header>
+            <ol class="tl">
+                <li class="now rv"><time>2023 – Present</time><h3>Cagayan State University, Carig Campus</h3><p>Bachelor of Science in Computer Engineering (4th Year)</p></li>
+                <li class="rv"><time>2021 – 2023</time><h3>Western Cagayan School of Arts and Trades</h3><p>Senior High School · STEM (Science, Technology, Engineering and Mathematics)</p></li>
+                <li class="rv"><time>2017 – 2021</time><h3>Callao National High School</h3><p class="lvl">Junior High School</p></li>
+                <li class="rv"><time>2011 – 2017</time><h3>Callao Elementary School</h3><p class="lvl">Elementary</p></li>
+                <li class="rv"><time>2009 – 2011</time><h3>United Methodist Church</h3><p class="lvl">Nursery – Kindergarten</p></li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="sec" id="achievements" aria-labelledby="t-ach">
+        <div class="wrap">
+            <header class="sh rv"><p class="eyebrow">Achievements</p><h2 id="t-ach">Certificates &amp; training</h2><p class="lead">Select a certificate to view it larger.</p></header>
+            <ul class="certs" id="certs"></ul>
+        </div>
+    </section>
+
+    <section class="sec" id="contact" aria-labelledby="t-contact">
+        <div class="wrap">
+            <div class="ct rv">
+                <div>
+                    <p class="eyebrow">Contact</p>
+                    <h2 id="t-contact">Let’s talk</h2>
+                    <p class="lead">Have a question? Send me an email or call me and I’ll reply as soon as I can.</p>
+                    <ul class="soc" id="soc2" aria-label="Social profiles"></ul>
+                </div>
+                <ul class="cl">
+                    <li><span>Email</span><a href="mailto:marcreilyoattalap@gmail.com">marcreilyoattalap@gmail.com</a><button class="cp" type="button" data-copy="marcreilyoattalap@gmail.com">Copy</button></li>
+                    <li><span>Phone</span><a href="tel:+639970917528">0997 091 7528</a><button class="cp" type="button" data-copy="09970917528">Copy</button></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="wrap fw"><span>© 2026 Marc Reily Palattao</span><a href="#home">Back to top ↑</a></div>
+</footer>
+<p class="sr" id="live" role="status"></p>
+
+<dialog id="dlg" aria-label="Certificate viewer">
+    <button class="x" id="dx" type="button" aria-label="Close">×</button>
+    <figure><img id="di" alt=""><figcaption id="dc"></figcaption></figure>
+    <div class="dn"><button id="dp" type="button">‹ Previous</button><button id="dnx" type="button">Next ›</button></div>
+</dialog>
+
+<script>
+    (function () {
+        "use strict";
+        var $ = function (s, r) { return (r || document).querySelector(s); };
+        var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+        var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+        /* ---------- Your content (edit here) ---------- */
+        var SOCIALS = [
+            { n: "GitHub", u: "https://github.com/marcreilypalattao", v: "0 0 16 16", h: '<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>' },
+            { n: "TikTok", u: "https://www.tiktok.com/@zych.gaming", v: "0 0 24 24", h: '<path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>' },
+            { n: "Instagram", u: "https://www.instagram.com/_mrcryly/", v: "0 0 24 24", st: 1, h: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>' },
+            { n: "Facebook", u: "https://www.facebook.com/zychsevi", v: "0 0 24 24", h: '<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8z"/>' }
+        ];
+        var PROJECTS = [
+            { t: "COEA Attendance System", d: "A web-based attendance system built with a separate front end and back end.", tags: ["Vue", "Python", "API"], u: "https://github.com/marcreilypalattao/coea-attendance.github.io", l: "View the front end on GitHub" },
+            { t: "Personal Portfolio", d: "This responsive, accessible portfolio website with light and dark themes.", tags: ["HTML", "CSS", "JavaScript"], u: "https://github.com/marcreilypalattao/marcreilypalattao.github.io", l: "View the source on GitHub" }
+        ];
+        var CONF = "Frontiers of Computer Engineering: 2025 International Conference on New and Emerging Tools";
+        var CONF_SUB = "Collaborative Innovation: Shaping the Future of Technology through Academic-Industry Partnership";
+        var CERTS = [
+            { f: "OJT.jpg", t: "On The Job Training", o: "Magellan Solutions", d: "June 04, 2026", a: "Certificate of On the Job Training at Magellan Solutions" },
+            { f: "certificate4.jpg", t: "Regional ITE Summit 2026", o: "Building Smarter Futures through Technology and Engineering", d: "July 22, 2026", a: "Certificate of Participation: Regional ITE Summit 2026" },
+            { f: "certificate1.jpg", t: "Basic Occupational Safety and Health Training", o: "Department of Labor and Employment, Occupational Safety and Health Center", d: "May 28, 2026", a: "Certificate of Completion: Basic Occupational Safety and Health Training" },
+            { f: "certificate3.png", t: CONF + " (Day 01)", o: CONF_SUB, d: "December 12, 2025", a: "Certificate of Participation: " + CONF + ", Day 01" },
+            { f: "certificate2.png", t: CONF + " (Day 02)", o: CONF_SUB, d: "December 13, 2025", a: "Certificate of Participation: " + CONF + ", Day 02" }
+        ];
+        var ROLES = ["Computer Engineering Student", "Public Relations Officer, ICpEP.se CSU Chapter", "Problem Solver", "Future Engineer", "Gamer"];
+
+        /* ---------- Render ---------- */
+        function icons(el, labels) {
+            el.innerHTML = SOCIALS.map(function (s) {
+                var svg = '<svg viewBox="' + s.v + '" aria-hidden="true" ' + (s.st ? 'fill="none" stroke="currentColor" stroke-width="2"' : 'fill="currentColor"') + '>' + s.h + '</svg>';
+                return '<li><a href="' + s.u + '" target="_blank" rel="noopener" aria-label="' + s.n + '">' + svg + (labels ? "<span>" + s.n + "</span>" : "") + "</a></li>";
+            }).join("");
+        }
+        icons($("#follow"), false);
+        icons($("#soc2"), true);
+
+        $("#pjg").innerHTML = PROJECTS.map(function (p) {
+            return '<article class="pj rv"><h3>' + esc(p.t) + "</h3><p>" + esc(p.d) + '</p><ul class="chips">' + p.tags.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") +
+                '</ul><a class="lk" href="' + esc(p.u) + '" target="_blank" rel="noopener">' + esc(p.l) + " →</a></article>";
+        }).join("");
+
+        $("#certs").innerHTML = CERTS.map(function (c, i) {
+            return '<li class="cc rv"><button type="button" data-i="' + i + '" aria-label="View certificate: ' + esc(c.t) + '"><img src="' + esc(c.f) + '" alt="' + esc(c.a) + '" loading="lazy"></button>' +
+                '<div class="cb"><h3>' + esc(c.t) + "</h3><p>" + esc(c.o) + "</p><time>" + esc(c.d) + "</time></div></li>";
+        }).join("");
+
+        /* ---------- Theme, menu, progress ---------- */
+        var root = document.documentElement;
+        $("#theme").addEventListener("click", function () {
+            var t = root.dataset.theme === "light" ? "dark" : "light";
+            root.dataset.theme = t;
+            try { localStorage.setItem("theme", t); } catch (e) {}
+            $('meta[name="theme-color"]').setAttribute("content", t === "light" ? "#f6f8fc" : "#0b0f17");
+        });
+        var nav = $("#nav"), menu = $("#menu");
+        function setMenu(o) { nav.classList.toggle("open", o); menu.setAttribute("aria-expanded", o); menu.setAttribute("aria-label", o ? "Close menu" : "Open menu"); }
+        menu.addEventListener("click", function () { setMenu(!nav.classList.contains("open")); });
+        $$("#nav a").forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+        var prog = $("#prog");
+        function onScroll() {
+            var h = document.documentElement.scrollHeight - innerHeight;
+            prog.style.width = (h > 0 ? Math.min(100, scrollY / h * 100) : 0) + "%";
+        }
+        addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+        /* ---------- Typing role ---------- */
+        var typed = $("#typed");
+        if (!reduce) {
+            var r = 0, i = 0, del = false;
+            (function tick() {
+                var w = ROLES[r], d;
+                typed.textContent = w.slice(0, i);
+                if (!del && i < w.length) { i++; d = 80; }
+                else if (!del) { del = true; d = 1500; }
+                else if (i > 0) { i--; d = 35; }
+                else { del = false; r = (r + 1) % ROLES.length; d = 350; }
+                setTimeout(tick, d);
+            })();
+        }
+
+        /* ---------- Reveal, count-up, active link ---------- */
+        function count(b) {
+            var n = +b.dataset.n, t0 = performance.now();
+            if (reduce) return;
+            (function step(t) {
+                var k = Math.min(1, (t - t0) / 900);
+                b.textContent = Math.round(n * k);
+                if (k < 1) requestAnimationFrame(step);
+            })(t0);
+        }
+        if ("IntersectionObserver" in window) {
+            var io = new IntersectionObserver(function (es) {
+                es.forEach(function (e) {
+                    if (!e.isIntersecting) return;
+                    e.target.classList.add("in");
+                    $$("b[data-n]", e.target).forEach(count);
+                    io.unobserve(e.target);
+                });
+            }, { threshold: 0.12 });
+            $$(".rv").forEach(function (el) { io.observe(el); });
+
+            var links = $$("#nav a"), map = {};
+            links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+            var so = new IntersectionObserver(function (es) {
+                es.forEach(function (e) {
+                    if (!e.isIntersecting) return;
+                    links.forEach(function (a) { a.removeAttribute("aria-current"); });
+                    if (map[e.target.id]) map[e.target.id].setAttribute("aria-current", "true");
+                });
+            }, { rootMargin: "-45% 0px -50% 0px" });
+            $$("main section[id]").forEach(function (s) { so.observe(s); });
+        } else {
+            $$(".rv").forEach(function (el) { el.classList.add("in"); });
+        }
+
+        /* ---------- Certificate viewer ---------- */
+        var dlg = $("#dlg"), cur = 0;
+        function show(n) {
+            cur = (n + CERTS.length) % CERTS.length;
+            var c = CERTS[cur];
+            $("#di").src = c.f; $("#di").alt = c.a;
+            $("#dc").textContent = c.t + " · " + c.d;
+        }
+        $("#certs").addEventListener("click", function (e) {
+            var b = e.target.closest("button[data-i]");
+            if (!b) return;
+            show(+b.dataset.i);
+            if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+        });
+        $("#dx").addEventListener("click", function () { dlg.close ? dlg.close() : dlg.removeAttribute("open"); });
+        $("#dp").addEventListener("click", function () { show(cur - 1); });
+        $("#dnx").addEventListener("click", function () { show(cur + 1); });
+        dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+        dlg.addEventListener("keydown", function (e) {
+            if (e.key === "ArrowLeft") show(cur - 1);
+            else if (e.key === "ArrowRight") show(cur + 1);
+        });
+
+        /* ---------- Copy buttons ---------- */
+        function copy(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+            return new Promise(function (ok, no) {
+                var t = document.createElement("textarea");
+                t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+                document.body.appendChild(t); t.select();
+                try { document.execCommand("copy") ? ok() : no(); } catch (e) { no(e); }
+                t.remove();
+            });
+        }
+        $$(".cp").forEach(function (b) {
+            b.addEventListener("click", function () {
+                copy(b.dataset.copy).then(function () {
+                    b.textContent = "Copied!"; $("#live").textContent = "Copied to clipboard";
+                    setTimeout(function () { b.textContent = "Copy"; }, 1600);
+                }, function () { b.textContent = "Press Ctrl+C"; });
+            });
+        });
+    })();
+</script>
+</body>
+</html>
