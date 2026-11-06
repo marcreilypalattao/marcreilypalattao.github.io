@@ -98,6 +98,7 @@
         #gate .box>p{margin-bottom:6px}
         #gate form{text-align:left}
         #gate .acts{justify-content:center}
+        .lnk{display:block;margin:14px auto 0;background:none;border:0;color:var(--teal);font:inherit;font-size:.9rem;text-decoration:underline;cursor:pointer}
         #gate details{margin-top:18px;text-align:left;color:var(--mut);font-size:.9rem}#gate summary{cursor:pointer;color:var(--teal)}
         #gate textarea{width:100%;margin-top:10px;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--teal);font:.8rem ui-monospace,Consolas,monospace;resize:none}
         #adm{position:fixed;inset:0;z-index:95;background:rgba(8,5,16,.8);display:none;place-items:center;padding:18px;overflow:auto}
@@ -122,24 +123,14 @@
     </style>
 </head>
 <body class="gated">
-<div id="gate" role="dialog" aria-modal="true" aria-label="Portfolio login">
-    <div class="box"><h1>Russel Heinrich Sawyer</h1>
-        <div id="gLoginV"><p>Private portfolio. Log in to view.</p>
-            <form id="gForm"><label for="gu">Username</label><input id="gu" autocomplete="username" required>
-                <label for="gp">Password</label><input id="gp" type="password" autocomplete="current-password" required>
-                <div class="msg" id="gMsg" role="status"></div>
-                <div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form>
-            <details id="gPub" class="hidden"><summary>Make this login work for visitors</summary>
-                <p>Replace the line starting with <b>var GATE=</b> in <b>index.html</b> with this line, then upload the file to GitHub:</p>
-                <textarea id="gCode" readonly rows="4" aria-label="Line to paste into index.html"></textarea>
-                <div class="acts"><button class="btn" id="gCopy" type="button">Copy line</button></div></details></div>
-        <div id="gSetupV" class="hidden"><p>Create the username and password visitors will use to open your portfolio.</p>
-            <form id="gSetForm"><label for="nu">Username</label><input id="nu" autocomplete="off" required>
-                <label for="np">Password (at least 8 characters)</label><input id="np" type="password" autocomplete="new-password" required>
-                <label for="np2">Repeat password</label><input id="np2" type="password" autocomplete="new-password" required>
-                <div class="msg" id="nMsg" role="status"></div>
-                <div class="acts"><button class="btn fill" type="submit">Create login</button></div></form>
-        </div></div></div>
+<div id="gate" role="dialog" aria-modal="true" aria-label="Portfolio access"><div class="box"><h1>Russel Heinrich Sawyer</h1>
+    <div id="gV-signup"><p>Create a username and password to view this portfolio.</p><form id="fSignup"><label for="gsu">Username</label><input id="gsu" type="text" autocomplete="username" required><label for="gsp">Password (at least 8 characters)</label><input id="gsp" type="password" autocomplete="new-password" required><label for="gsp2">Repeat password</label><input id="gsp2" type="password" autocomplete="new-password" required><div class="acts"><button class="btn fill" type="submit">Create account</button></div></form><button class="lnk" type="button" data-go="login">Already have an account? Log in</button></div>
+    <div id="gV-login" class="hidden"><p>Log in to view this portfolio.</p><form id="fLogin"><label for="glu">Username</label><input id="glu" type="text" autocomplete="username" required><label for="glp">Password</label><input id="glp" type="password" autocomplete="current-password" required><div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form><button class="lnk" type="button" data-go="signup">New here? Create an account</button></div>
+    <div id="gV-alogin" class="hidden"><p>Admin login.</p><form id="fAdmin"><label for="gau">Admin username</label><input id="gau" type="text" autocomplete="username" required><label for="gap">Admin password</label><input id="gap" type="password" autocomplete="current-password" required><div class="acts"><button class="btn fill" type="submit">Log in as admin</button></div></form></div>
+    <div id="gV-asetup" class="hidden"><p>Create the admin username and password only you will use.</p><form id="fASetup"><label for="gcu">Admin username</label><input id="gcu" type="text" autocomplete="username" required><label for="gcp">Password (at least 8 characters)</label><input id="gcp" type="password" autocomplete="new-password" required><label for="gcp2">Repeat password</label><input id="gcp2" type="password" autocomplete="new-password" required><div class="acts"><button class="btn fill" type="submit">Create admin account</button></div></form></div>
+    <div class="msg" id="gMsg" role="status"></div>
+    <div class="lnks"><button class="lnk" type="button" data-go="alogin">Admin login</button><button class="lnk hidden" id="gBack" type="button" data-go="login">Back to visitor login</button></div>
+</div></div>
 <nav><div class="wrap"><b>Russel Heinrich Sawyer</b>
     <ul><li><a href="#home">Home</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div></nav>
 
@@ -355,32 +346,38 @@
     try{if(sessionStorage.getItem("folio_in")&&getAcct())document.body.classList.add("admin")}catch(e){}
     openDB().then(function(){ITEMS=STATIC;render();load()});
 
-    // ===== Viewer gate (front-door login) =====
-    // h empty = setup mode. After you paste the line from "Make this login work for visitors", visitors get a plain login.
-    var GATE={s:"gate-v1",u:"",h:""};
-    (function(){var g=document.getElementById("gate"),lv=document.getElementById("gLoginV"),sv=document.getElementById("gSetupV"),pub=document.getElementById("gPub"),code=document.getElementById("gCode"),gm=document.getElementById("gMsg");
+    // ===== Front door: visitors create an account; admin logs in with the admin account =====
+    (function(){var g=document.getElementById("gate"),msg=document.getElementById("gMsg"),secure=window.crypto&&crypto.subtle;
+        function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
         function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio_gate","1")}catch(e){}}
         try{if(sessionStorage.getItem("folio_gate")==="1"){open();return}}catch(e){}
-        var secure=window.crypto&&crypto.subtle;
-        function gh(u,p){return sha(GATE.s+"|"+u.toLowerCase()+"|"+p)}
-        function local(){try{return JSON.parse(localStorage.getItem("folio_gate_acct")||"null")}catch(e){return null}}
-        function showLogin(note){sv.classList.add("hidden");lv.classList.remove("hidden");var a=local();
-            if(!GATE.h&&a&&a.line){code.value=a.line;pub.classList.remove("hidden")}
-            if(note){gm.textContent=note;gm.className="msg ok"}document.getElementById("gu").focus()}
-        if(!GATE.h&&!local()){lv.classList.add("hidden");sv.classList.remove("hidden");document.getElementById("nu").focus()}else showLogin();
-        document.getElementById("gSetForm").onsubmit=function(e){e.preventDefault();var m=document.getElementById("nMsg");
-            var u=document.getElementById("nu").value.trim().toLowerCase(),p=document.getElementById("np").value,p2=document.getElementById("np2").value;
-            if(!secure){m.textContent="Login needs a secure (https) page.";return}
-            if(!u)return m.textContent="Enter a username.";if(p.length<8)return m.textContent="Use a password with at least 8 characters.";if(p!==p2)return m.textContent="The two passwords don’t match.";
-            gh(u,p).then(function(h){var line='var GATE={s:"'+GATE.s+'",u:'+JSON.stringify(u)+',h:"'+h+'"};';
-                try{localStorage.setItem("folio_gate_acct",JSON.stringify({u:u,h:h,line:line}))}catch(x){}
-                code.value=line;pub.classList.remove("hidden");showLogin("Login created. Now log in to open your portfolio.")})};
-        document.getElementById("gCopy").onclick=function(){code.select();try{navigator.clipboard.writeText(code.value)}catch(e){document.execCommand("copy")}this.textContent="Copied"};
-        document.getElementById("gForm").onsubmit=function(e){e.preventDefault();
-            if(!secure){gm.className="msg";gm.textContent="Login needs a secure (https) page.";return}
-            var u=document.getElementById("gu").value.trim().toLowerCase(),p=document.getElementById("gp").value,a=local();
-            gh(u,p).then(function(h){var ok=GATE.h?(u===GATE.u&&h===GATE.h):(a&&u===a.u&&h===a.h);
-                if(ok)open();else{gm.className="msg";gm.textContent="Wrong username or password.";document.getElementById("gp").value=""}})}})();
+        function viewers(){try{return JSON.parse(localStorage.getItem("folio_viewers")||"[]")}catch(e){return[]}}
+        function val(id){return document.getElementById(id).value}
+        function go(n,note){["signup","login","alogin","asetup"].forEach(function(v){document.getElementById("gV-"+v).classList.toggle("hidden",v!==n)});
+            document.getElementById("gBack").classList.toggle("hidden",n!=="alogin"&&n!=="asetup");
+            [].forEach.call(document.querySelectorAll('.lnks [data-go="alogin"]'),function(b){b.classList.toggle("hidden",n==="alogin"||n==="asetup")});
+            say(note||"",!!note);var f=document.querySelector("#gV-"+n+" input");if(f)f.focus()}
+        [].forEach.call(document.querySelectorAll("[data-go]"),function(b){b.onclick=function(){var t=b.dataset.go;go(t==="alogin"&&!getAcct()?"asetup":t)}});
+        function ok(){if(secure)return true;say("Login needs a secure (https) page.");return false}
+        document.getElementById("fSignup").onsubmit=function(e){e.preventDefault();if(!ok())return;
+            var u=val("gsu").trim().toLowerCase(),p=val("gsp"),p2=val("gsp2"),list=viewers();
+            if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
+            if(list.some(function(x){return x.u===u}))return say("That username is taken. Choose another.");
+            var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
+            hashPw(u,p,salt).then(function(h){list.push({u:u,s:salt,h:h});try{localStorage.setItem("folio_viewers",JSON.stringify(list))}catch(x){}go("login","Account created. Now log in to view the portfolio.")})};
+        document.getElementById("fLogin").onsubmit=function(e){e.preventDefault();if(!ok())return;
+            var u=val("glu").trim().toLowerCase(),p=val("glp"),acct=viewers().filter(function(x){return x.u===u})[0];
+            function bad(){say("Wrong username or password.");document.getElementById("glp").value=""}
+            if(!acct)return bad();hashPw(u,p,acct.s).then(function(h){h===acct.h?open():bad()})};
+        document.getElementById("fAdmin").onsubmit=function(e){e.preventDefault();if(!ok())return;
+            var u=val("gau").trim().toLowerCase(),p=val("gap"),a=getAcct();if(!a)return go("asetup");
+            hashPw(u,p,a.s).then(function(h){if(u===a.u&&h===a.h){setAdmin(true);open()}else{say("Wrong admin username or password.");document.getElementById("gap").value=""}})};
+        document.getElementById("fASetup").onsubmit=function(e){e.preventDefault();if(!ok())return;
+            var u=val("gcu").trim().toLowerCase(),p=val("gcp"),p2=val("gcp2");
+            if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
+            var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
+            hashPw(u,p,salt).then(function(h){try{localStorage.setItem("folio_admin",JSON.stringify({u:u,s:salt,h:h}))}catch(x){}go("alogin","Admin created. Now log in as admin.")})};
+        go(viewers().length?"login":"signup")})();
 </script>
 </body>
 </html>
