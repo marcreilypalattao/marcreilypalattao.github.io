@@ -107,12 +107,18 @@
         .box h3{font-size:1.4rem;margin-bottom:6px}
         .box>p{color:var(--mut);font-size:.92rem;margin-bottom:16px}
         .box label{display:block;font-weight:500;font-size:.9rem;margin:12px 0 5px}
-        .box input,.box select{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+        .box input,.box select,.box textarea{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
         .box input[type=file]{padding:9px}
         .msg{min-height:1.4em;margin-top:12px;font-size:.9rem;color:var(--rose)}
         .msg.ok{color:var(--teal)}
         .acts{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
         .acts .btn{padding:10px 18px}
+        .box textarea{resize:vertical;min-height:80px}
+        .edt{position:absolute;top:10px;right:10px;z-index:3;width:34px;height:34px;border-radius:50%;background:var(--teal);color:#06211e;font-size:1rem;font-weight:700;cursor:pointer;display:none;place-items:center}
+        body.admin .card:not(.mine) .edt{display:grid}
+        .hero h1 b{font-weight:inherit}
+        .sec{margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
+        .sec h4{font-family:Syne;font-size:1.05rem}.sec p{color:var(--mut);font-size:.88rem;margin:4px 0 0}
         .hidden{display:none!important}
         @media(max-width:860px){
             .hero .wrap,.about,.contact{grid-template-columns:1fr}
@@ -123,7 +129,7 @@
     </style>
 </head>
 <body class="gated">
-<div id="gate" role="dialog" aria-modal="true" aria-label="Portfolio access"><div class="box"><h1>Russel Heinrich Sawyer</h1>
+<div id="gate" role="dialog" aria-modal="true" aria-label="Portfolio access"><div class="box"><h1 id="gName">Russel Heinrich Sawyer</h1>
     <div id="gV-signup"><p>Create a username and password to view this portfolio.</p><form id="fSignup"><label for="gsu">Username</label><input id="gsu" type="text" autocomplete="username" required><label for="gsp">Password (at least 8 characters)</label><input id="gsp" type="password" autocomplete="new-password" required><label for="gsp2">Repeat password</label><input id="gsp2" type="password" autocomplete="new-password" required><div class="acts"><button class="btn fill" type="submit">Create account</button></div></form><button class="lnk" type="button" data-go="login">Already have an account? Log in</button></div>
     <div id="gV-login" class="hidden"><p>Log in to view this portfolio.</p><form id="fLogin"><label for="glu">Username</label><input id="glu" type="text" autocomplete="username" required><label for="glp">Password</label><input id="glp" type="password" autocomplete="current-password" required><div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form><button class="lnk" type="button" data-go="signup">New here? Create an account</button></div>
     <div id="gV-alogin" class="hidden"><p>Admin login.</p><form id="fAdmin"><label for="gau">Admin username</label><input id="gau" type="text" autocomplete="username" required><label for="gap">Admin password</label><input id="gap" type="password" autocomplete="current-password" required><div class="acts"><button class="btn fill" type="submit">Log in as admin</button></div></form></div>
@@ -131,20 +137,20 @@
     <div class="msg" id="gMsg" role="status"></div>
     <div class="lnks"><button class="lnk" type="button" data-go="alogin">Admin login</button><button class="lnk hidden" id="gBack" type="button" data-go="login">Back to visitor login</button></div>
 </div></div>
-<nav><div class="wrap"><b>Russel Heinrich Sawyer</b>
+<nav><div class="wrap"><b id="nName">Russel Heinrich Sawyer</b>
     <ul><li><a href="#home">Home</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div></nav>
 
 <main>
     <section class="hero" id="home"><div class="wrap">
         <div>
-            <h1>Russel Heinrich <span>Sawyer</span></h1>
+            <h1><b id="hFirst">Russel Heinrich</b> <span id="hLast">Sawyer</span></h1>
             <div class="role" aria-live="off"><span id="typed"></span><i aria-hidden="true"></i></div>
-            <p class="tag">Crafting dreams into reality, one stroke at a time.</p>
+            <p class="tag" id="tagP">Crafting dreams into reality, one stroke at a time.</p>
             <div class="row soc">
-                <a href="https://www.instagram.com/russ.heinrich/?__pwa=1" aria-label="Instagram: russ.heinrich" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-                <a href="https://www.instagram.com/russilog_/?__pwa=1" aria-label="Instagram: russilog_" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-                <a href="https://www.tiktok.com/@haynrich123" aria-label="TikTok" target="_blank" rel="noopener"><svg class="f" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
-                <a href="https://www.facebook.com/russel.sawyer.5" aria-label="Facebook" target="_blank" rel="noopener">f</a>
+                <a id="sl1" href="https://www.instagram.com/russ.heinrich/?__pwa=1" aria-label="Instagram: russ.heinrich" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+                <a id="sl2" href="https://www.instagram.com/russilog_/?__pwa=1" aria-label="Instagram: russilog_" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+                <a id="sl3" href="https://www.tiktok.com/@haynrich123" aria-label="TikTok" target="_blank" rel="noopener"><svg class="f" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+                <a id="sl4" href="https://www.facebook.com/russel.sawyer.5" aria-label="Facebook" target="_blank" rel="noopener">f</a>
             </div>
             <div class="row"><a class="btn fill" href="#gallery">View gallery</a><a class="btn" href="#contact">Contact me</a></div>
         </div>
@@ -163,30 +169,22 @@
     <section class="blk" id="about"><div class="wrap">
         <div class="head"><h2>About me</h2></div>
         <div class="about">
-            <div class="panel bio"><h3>Bio</h3><p>I’m Russel Heinrich Sawyer, a creative individual with a passion for exploring different forms of art and self-expression.
-
-                Photography is one of the ways I see and interpret the world, but my creativity doesn’t end behind the camera. I’m also drawn to dance, music, painting, makeup, and other forms of visual expression.
-
-                I’m naturally curious about things I haven’t tried, ideas I haven’t explored, and versions of myself I have yet to discover. I believe creativity is not limited to one medium or one identity. It’s something that continues to evolve as we experience life, learn, and grow.
-
-                This space is a reflection of who I am, what I create, what inspires me, and the things I’m still discovering about myself.
-
-                Forever curious, forever learning.</p></div>
+            <div class="panel bio"><h3>Bio</h3><p id="bioP"></p></div>
             <div class="side">
-                <div class="panel"><h3>Location</h3><p>Pasay</p></div>
-                <div class="panel"><h3>Hobbies</h3><ul class="chips"><li>Dancing</li><li>Photography</li><li>Singing</li><li>Sketching</li><li>Painting</li><li>Drawing</li></ul></div>
-                <div class="panel"><h3>Skills</h3><ul class="chips"><li>Problem Solving</li><li>Time Management</li><li>Quick Learning</li><li>Strong Communication</li><li>Team Collaboration</li><li>Analytical Thinking</li></ul></div>
+                <div class="panel"><h3>Location</h3><p id="locP">Pasay</p></div>
+                <div class="panel"><h3>Hobbies</h3><ul class="chips" id="hobU"></ul></div>
+                <div class="panel"><h3>Skills</h3><ul class="chips" id="skU"></ul></div>
             </div></div>
     </div></section>
 
     <section class="blk" id="contact"><div class="wrap">
         <div class="head"><h2>Contact</h2></div>
-        <div class="contact"><p>Ready to book a shoot or have a quick question? Message me on Instagram and I’ll reply as soon as I can.</p>
-            <div class="panel"><h3>Instagram</h3><a href="https://www.instagram.com/russ.heinrich/?__pwa=1" target="_blank" rel="noopener">russ.heinrich</a></div></div>
+        <div class="contact"><p id="ctP">Ready to book a shoot or have a quick question? Message me on Instagram and I’ll reply as soon as I can.</p>
+            <div class="panel"><h3>Instagram</h3><a id="igA" href="https://www.instagram.com/russ.heinrich/?__pwa=1" target="_blank" rel="noopener">russ.heinrich</a></div></div>
     </div></section>
 </main>
 
-<footer>© 2026 Russel Heinrich Sawyer<button id="admOpen" type="button">Admin</button></footer>
+<footer>© 2026 <span id="fName">Russel Heinrich Sawyer</span><button id="admOpen" type="button">Admin</button></footer>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Viewer"><div class="lbs"><button class="lbb" id="lbx" aria-label="Close">&times;</button><button class="lbb" id="lbp" aria-label="Previous">&#8249;</button><div id="lbm"></div><button class="lbb" id="lbn" aria-label="Next">&#8250;</button></div><div class="lbi"><h3 id="lbt"></h3><p id="lbd"></p></div></div>
 
@@ -205,7 +203,31 @@
             <label for="af">Files</label><input id="af" type="file" accept="image/*,video/*" multiple>
             <label for="at">Title</label><input id="at" placeholder="Leave blank to use the file name">
             <label for="ad">Date or note</label><input id="ad" placeholder="e.g. November 2026">
-            <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div></div>
+            <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div>
+            <div class="sec"><h4>Edit the site</h4><p>You can edit everything: text, links and every gallery item (use the pencil on a card). Edits show on this device. To show them to everyone, download content.json and upload it to GitHub next to index.html.</p>
+                <div class="acts"><button class="btn" id="bEdit" type="button">Edit text &amp; links</button><button class="btn" id="bAddFile" type="button">Add file from GitHub</button><button class="btn" id="bExport" type="button">Download content.json</button><button class="btn" id="bReset" type="button">Reset my edits</button></div></div></div>
+        <div id="vEdit" class="hidden"><h3>Edit site text and links</h3>
+            <label for="e_first">First name(s)</label><input id="e_first"><label for="e_last">Last name</label><input id="e_last">
+            <label for="e_roles">Roles (one per line, shown in the typing line)</label><textarea id="e_roles" rows="4"></textarea>
+            <label for="e_tag">Tagline</label><input id="e_tag">
+            <label for="e_bio">Bio</label><textarea id="e_bio" rows="9"></textarea>
+            <label for="e_loc">Location</label><input id="e_loc">
+            <label for="e_hob">Hobbies (one per line)</label><textarea id="e_hob" rows="4"></textarea>
+            <label for="e_sk">Skills (one per line)</label><textarea id="e_sk" rows="4"></textarea>
+            <label for="e_ct">Contact message</label><textarea id="e_ct" rows="3"></textarea>
+            <label for="e_igl">Instagram name shown in Contact</label><input id="e_igl">
+            <label for="e_ig">Contact Instagram link</label><input id="e_ig" type="url">
+            <label for="e_l1">Top social link: Instagram 1</label><input id="e_l1" type="url">
+            <label for="e_l2">Top social link: Instagram 2</label><input id="e_l2" type="url">
+            <label for="e_l3">Top social link: TikTok</label><input id="e_l3" type="url">
+            <label for="e_l4">Top social link: Facebook</label><input id="e_l4" type="url">
+            <div class="acts"><button class="btn fill" id="bEditSave" type="button">Save changes</button><button class="btn" id="bEditBack" type="button">Back</button></div></div>
+        <div id="vItem" class="hidden"><h3 id="iTitleH">Edit item</h3><p>The file path is where the file sits in your GitHub repo, for example photos/photo40.jpg.</p>
+            <label for="i_src">File path</label><input id="i_src">
+            <label for="i_cat">Category</label><select id="i_cat"><option>Photography</option><option>Videos</option></select>
+            <label for="i_title">Title</label><input id="i_title">
+            <label for="i_meta">Date or note</label><input id="i_meta">
+            <div class="acts"><button class="btn fill" id="iSave" type="button">Save</button><button class="btn" id="iDel" type="button">Remove</button><button class="btn" id="iBack" type="button">Back</button></div></div>
         <div class="msg" id="msg" role="status"></div>
     </div></div>
 
@@ -227,11 +249,17 @@
     function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
     function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 
+    var DEF={site:{first:"Russel Heinrich",last:"Sawyer",roles:["Photographer","Singer","Dancer","Tattoo Artist","Concept Artist"],tagline:"Crafting dreams into reality, one stroke at a time.",
+            bio:"I’m Russel Heinrich Sawyer, a creative individual with a passion for exploring different forms of art and self-expression.\n\nPhotography is one of the ways I see and interpret the world, but my creativity doesn’t end behind the camera. I’m also drawn to dance, music, painting, makeup, and other forms of visual expression.\n\nI’m naturally curious about things I haven’t tried, ideas I haven’t explored, and versions of myself I have yet to discover. I believe creativity is not limited to one medium or one identity. It’s something that continues to evolve as we experience life, learn, and grow.\n\nThis space is a reflection of who I am, what I create, what inspires me, and the things I’m still discovering about myself.\n\nForever curious, forever learning.",
+            loc:"Pasay",hobbies:["Dancing","Photography","Singing","Sketching","Painting","Drawing"],skills:["Problem Solving","Time Management","Quick Learning","Strong Communication","Team Collaboration","Analytical Thinking"],
+            contact:"Ready to book a shoot or have a quick question? Message me on Instagram and I’ll reply as soon as I can.",igLabel:"russ.heinrich",
+            links:{ig:"https://www.instagram.com/russ.heinrich/?__pwa=1",ig1:"https://www.instagram.com/russ.heinrich/?__pwa=1",ig2:"https://www.instagram.com/russilog_/?__pwa=1",tt:"https://www.tiktok.com/@haynrich123",fb:"https://www.facebook.com/russel.sawyer.5"}},gallery:STATIC};
+    var C=JSON.parse(JSON.stringify(DEF));
     // Typing roles
-    (function(){var roles=["Photographer","Singer","Dancer","Tattoo Artist","Concept Artist"],t=document.getElementById("typed");
-        if(reduce){t.textContent=roles.join(" · ");return}
-        var r=0,i=0,del=false;(function tick(){var w=roles[r];t.textContent=w.slice(0,i);
-            if(!del&&i<w.length){i++;setTimeout(tick,90)}else if(!del){del=true;setTimeout(tick,1300)}else if(i>0){i--;setTimeout(tick,45)}else{del=false;r=(r+1)%roles.length;setTimeout(tick,250)}})()})();
+    (function(){function R(){return C.site.roles}var t=document.getElementById("typed");
+        if(reduce){t.textContent=R().join(" · ");return}
+        var r=0,i=0,del=false;(function tick(){var w=R()[r%R().length];t.textContent=w.slice(0,i);
+            if(!del&&i<w.length){i++;setTimeout(tick,90)}else if(!del){del=true;setTimeout(tick,1300)}else if(i>0){i--;setTimeout(tick,45)}else{del=false;r=(r+1)%R().length;setTimeout(tick,250)}})()})();
 
     // ===== Local (admin) storage in IndexedDB =====
     var DB=null;
@@ -263,14 +291,14 @@
             var im=b.querySelector("img");if(im)im.addEventListener("error",function(){this.style.display="none"});
             if(it.local){var d=el("span","del","&times;");d.setAttribute("role","button");d.setAttribute("aria-label","Delete "+it.title);d.tabIndex=0;
                 var go=function(ev){ev.stopPropagation();if(confirm("Delete “"+it.title+"”?"))dbDel(it.id).then(load)};
-                d.onclick=go;d.onkeydown=function(ev){if(ev.key==="Enter")go(ev)};b.appendChild(d)}
+                d.onclick=go;d.onkeydown=function(ev){if(ev.key==="Enter")go(ev)};b.appendChild(d)}else{var e2=el("span","edt","&#9998;");e2.setAttribute("role","button");e2.setAttribute("aria-label","Edit "+it.title);e2.tabIndex=0;var ed=function(ev){ev.stopPropagation();openItem(C.gallery.indexOf(it))};e2.onclick=ed;e2.onkeydown=function(ev){if(ev.key==="Enter")ed(ev)};b.appendChild(e2)}
             b.onclick=function(){openLb(i)};tilt(b,14);grid.appendChild(b)});
         grid.appendChild(el("p","empty hide","Nothing in this category yet."));
         applyFilter();buildRing()}
     function load(){dbAll().then(function(rows){
         ITEMS.forEach(function(x){if(x.url)URL.revokeObjectURL(x.url)});
         var local=rows.map(function(r){return{id:r.id,local:true,type:r.kind==="video"?"video":"",url:URL.createObjectURL(r.blob),title:r.title,cat:r.kind==="video"?"Videos":"Photography",meta:r.meta}}).reverse();
-        ITEMS=local.concat(STATIC);render()})}
+        ITEMS=local.concat(C.gallery);render()})}
 
     // 3D ring (hero)
     function buildRing(){var ring=document.getElementById("ring");ring.innerHTML="";
@@ -302,7 +330,7 @@
     // ===== Admin =====
     var adm=document.getElementById("adm"),msg=document.getElementById("msg");
     function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
-    function view(n){["vSetup","vLogin","vPanel"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("")}
+    function view(n){["vSetup","vLogin","vPanel","vEdit","vItem"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("")}
     function sha(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",b).then(function(h){return[].map.call(new Uint8Array(h),function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
     function hashPw(u,p,salt){return sha(salt+"|"+u.toLowerCase()+"|"+p)}
     function getAcct(){try{return JSON.parse(localStorage.getItem("folio_admin")||"null")}catch(e){return null}}
@@ -342,8 +370,47 @@
             .then(function(){document.getElementById("af").value="";document.getElementById("at").value="";load();say(done+" added to the gallery.",true)})
             .catch(function(){say("Couldn’t save a file. It may be too large for this browser’s storage.")})};
 
+    // ===== Site content (admin can edit everything) =====
+    function $(id){return document.getElementById(id)}
+    function save(){try{localStorage.setItem("folio_content",JSON.stringify(C))}catch(e){}}
+    function initContent(){var loc=null;try{loc=JSON.parse(localStorage.getItem("folio_content")||"null")}catch(e){}
+        function use(j){if(j&&j.site&&Array.isArray(j.gallery)){j.site=Object.assign({},DEF.site,j.site);j.site.links=Object.assign({},DEF.site.links,j.site.links);C=j}}
+        if(loc){use(loc);return Promise.resolve()}
+        return fetch("content.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():null}).then(use).catch(function(){})}
+    function T(id,t){var e=$(id);if(e)e.textContent=t}
+    function safeUrl(u){return/^https?:\/\//i.test(u)?u:"#"}
+    function applySite(){var s=C.site,L=s.links,nm=s.first+" "+s.last;
+        T("hFirst",s.first);T("hLast",s.last);T("nName",nm);T("gName",nm);T("fName",nm);document.title=nm+" | Portfolio";
+        T("tagP",s.tagline);T("bioP",s.bio);T("locP",s.loc);T("ctP",s.contact);T("igA",s.igLabel);if(reduce)T("typed",s.roles.join(" · "));
+        $("igA").href=safeUrl(L.ig);["sl1","sl2","sl3","sl4"].forEach(function(id,i){$(id).href=safeUrl(L[["ig1","ig2","tt","fb"][i]])});
+        [["hobU",s.hobbies],["skU",s.skills]].forEach(function(p){var u=$(p[0]);u.innerHTML="";p[1].forEach(function(x){u.appendChild(el("li","",esc(x)))})})}
+    var FE=[["e_first","first"],["e_last","last"],["e_tag","tagline"],["e_bio","bio"],["e_loc","loc"],["e_ct","contact"],["e_igl","igLabel"]],
+        FL=[["e_ig","ig"],["e_l1","ig1"],["e_l2","ig2"],["e_l3","tt"],["e_l4","fb"]],FA=[["e_roles","roles"],["e_hob","hobbies"],["e_sk","skills"]];
+    $("bEdit").onclick=function(){var s=C.site;FE.forEach(function(p){$(p[0]).value=s[p[1]]});FL.forEach(function(p){$(p[0]).value=s.links[p[1]]});FA.forEach(function(p){$(p[0]).value=s[p[1]].join("\n")});view("vEdit")};
+    $("bEditBack").onclick=function(){view("vPanel")};
+    $("bEditSave").onclick=function(){var s=C.site;FE.forEach(function(p){s[p[1]]=$(p[0]).value.trim()});FL.forEach(function(p){s.links[p[1]]=$(p[0]).value.trim()});
+        FA.forEach(function(p){s[p[1]]=$(p[0]).value.split("\n").map(function(x){return x.trim()}).filter(Boolean)});
+        if(!s.roles.length)s.roles=["Photographer"];save();applySite();view("vPanel");say("Site updated.",true)};
+    var editIdx=-1;
+    function openItem(i){editIdx=i;var it=i<0?{src:"photos/",cat:"Photography",title:"",meta:""}:C.gallery[i];
+        $("i_src").value=it.src;$("i_cat").value=it.cat;$("i_title").value=it.title;$("i_meta").value=it.meta||"";
+        $("iTitleH").textContent=i<0?"Add a file from your GitHub photos folder":"Edit item";$("iDel").classList.toggle("hidden",i<0);
+        lastF=document.activeElement;adm.classList.add("open");view("vItem")}
+    $("bAddFile").onclick=function(){openItem(-1)};
+    $("iBack").onclick=closeAdm;
+    $("iSave").onclick=function(){var src=$("i_src").value.trim(),cat=$("i_cat").value;
+        if(!src||src==="photos/")return say("Enter the file path, for example photos/photo40.jpg.");
+        var it={src:src,title:$("i_title").value.trim()||"Untitled",cat:cat,meta:$("i_meta").value.trim()};
+        if(cat==="Videos"){it.type="video";it.poster=src.replace(/\.[^.\/]+$/,".jpg")}
+        if(editIdx<0)C.gallery.push(it);else C.gallery[editIdx]=it;
+        save();load();closeAdm()};
+    $("iDel").onclick=function(){if(confirm("Remove this item from the gallery? The file stays in your photos folder on GitHub.")){C.gallery.splice(editIdx,1);save();load();closeAdm()}};
+    $("bExport").onclick=function(){var b=new Blob([JSON.stringify(C,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="content.json";document.body.appendChild(a);a.click();a.remove();
+        say("Downloaded content.json. Upload it to GitHub next to index.html to show your edits to everyone.",true)};
+    $("bReset").onclick=function(){if(confirm("Discard the edits saved in this browser and go back to the published version?")){try{localStorage.removeItem("folio_content")}catch(e){}location.reload()}};
+
     try{if(sessionStorage.getItem("folio_in")&&getAcct())document.body.classList.add("admin")}catch(e){}
-    openDB().then(function(){ITEMS=STATIC;render();load()});
+    initContent().then(openDB).then(function(){applySite();ITEMS=C.gallery;render();load()});
 
     // ===== Front door: visitors create an account; admin logs in with the admin account =====
     (function(){var g=document.getElementById("gate"),msg=document.getElementById("gMsg"),secure=window.crypto&&crypto.subtle;
