@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.dataset.theme=t}catch(e){}</script>
-    <noscript><style>.rv{opacity:1!important;transform:none!important}</style></noscript>
+    <noscript><style>.rv{opacity:1!important;translate:none!important}#bg3d{display:none}</style></noscript>
     <style>
         :root{--bg:#0b0f17;--s1:#111826;--s2:#172033;--line:#243049;--tx:#e8eef9;--mut:#9aa8c2;--ac:#38bdf8;--ac2:#fbbf24;--on:#06202c;--sh:0 20px 50px rgba(0,0,0,.35);--mono:"JetBrains Mono",ui-monospace,Consolas,Menlo,monospace;color-scheme:dark}
         :root[data-theme=light]{--bg:#f6f8fc;--s1:#fff;--s2:#eef2f8;--line:#dbe3ef;--tx:#0f172a;--mut:#475569;--ac:#0369a1;--ac2:#b45309;--on:#fff;--sh:0 20px 50px rgba(15,23,42,.1);color-scheme:light}
@@ -102,8 +102,8 @@
         .tl h3{margin:2px 0}
         .tl p,.lvl{color:var(--mut);font-size:.92rem}
         .certs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
-        .cc{background:var(--s1);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
-        .cc:hover{transform:translateY(-4px);border-color:var(--ac)}
+        .cc{background:var(--s1);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:translate .2s,border-color .2s}
+        .cc:hover{translate:0 -4px;border-color:var(--ac)}
         .cc button{display:block;width:100%;border:0;padding:0;background:var(--s2);cursor:zoom-in}
         .cc img{width:100%;aspect-ratio:4/3;object-fit:contain}
         .cb{padding:16px 18px 20px}
@@ -128,8 +128,17 @@
         .dn button,.x{font:600 .88rem "Inter",sans-serif;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--s2);color:var(--tx);cursor:pointer}
         .dn button:hover,.x:hover{border-color:var(--ac)}
         .x{position:absolute;top:12px;right:12px;width:40px;height:40px;padding:0;font-size:1.3rem;z-index:2}
-        .rv{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}
-        .rv.in{opacity:1;transform:none}
+        .rv{opacity:0;translate:0 18px;transition:opacity .6s,translate .6s}
+        .rv.in{opacity:1;translate:none}
+        #bg3d{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+        .tilt{position:relative;transition:opacity .6s,translate .6s,transform .45s cubic-bezier(.2,.7,.2,1),border-color .2s}
+        .tilt.on{transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .6s,translate .6s,transform .1s linear,border-color .2s}
+        .tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--ac) 20%,transparent),transparent 70%)}
+        .tilt.on::after{opacity:1}
+        .pw{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+        .pw.on{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .12s linear}
+        .pw::before{translate:calc(var(--px,0) * -16px) calc(var(--py,0) * -12px);transition:translate .15s linear}
+        .snip{translate:calc(var(--px,0) * 22px) calc(var(--py,0) * 16px);transition:translate .15s linear}
 
         @media(max-width:900px){
             .hg,.ct{grid-template-columns:1fr}
@@ -152,12 +161,13 @@
         @media(prefers-reduced-motion:reduce){
             html{scroll-behavior:auto}
             .cur{animation:none}
-            .rv{opacity:1;transform:none;transition:none}
-            .btn,.cc{transition:none}
+            .rv{opacity:1;translate:none;transition:none}
+            .btn,.cc,.pw,.pw::before,.snip{transition:none}
         }
     </style>
 </head>
 <body>
+<canvas id="bg3d" aria-hidden="true"></canvas>
 <a class="skip" href="#main">Skip to content</a>
 <div class="prog" id="prog" aria-hidden="true"></div>
 
@@ -445,6 +455,200 @@
                 }, function () { b.textContent = "Press Ctrl+C"; });
             });
         });
+
+        /* ---------- 3D effects ---------- */
+        (function () {
+            var fine = matchMedia("(hover:hover) and (pointer:fine)").matches;
+            var root = document.documentElement;
+
+            /* Card tilt (works for cards rendered by JS too) */
+            if (fine && !reduce) {
+                var SEL = ".bx,.sk,.pj,.cc,.stats li", cur = null, ev = null, raf = 0;
+                var leave = function () { if (cur) { cur.classList.remove("on"); cur = null; } };
+                var frame = function () {
+                    raf = 0; if (!cur || !ev) return;
+                    var r = cur.getBoundingClientRect();
+                    var x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height;
+                    cur.style.setProperty("--ry", ((x - .5) * 10).toFixed(2) + "deg");
+                    cur.style.setProperty("--rx", ((.5 - y) * 10).toFixed(2) + "deg");
+                    cur.style.setProperty("--mx", (x * 100).toFixed(1) + "%");
+                    cur.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+                };
+                document.addEventListener("pointermove", function (e) {
+                    if (e.pointerType && e.pointerType !== "mouse") return;
+                    var el = e.target.closest ? e.target.closest(SEL) : null;
+                    if (el !== cur) { leave(); cur = el; if (el) { el.classList.add("tilt"); el.classList.add("on"); } }
+                    ev = e; if (cur && !raf) raf = requestAnimationFrame(frame);
+                }, { passive: true });
+                document.addEventListener("pointerleave", leave);
+                window.addEventListener("blur", leave);
+
+                /* Hero portrait: tilt + parallax layers */
+                var pw = $(".pw");
+                if (pw) {
+                    var hg = pw.closest(".hg") || pw, pr = 0, pe = null;
+                    var pf = function () {
+                        pr = 0; var r = hg.getBoundingClientRect();
+                        var x = ((pe.clientX - r.left) / r.width - .5) * 2, y = ((pe.clientY - r.top) / r.height - .5) * 2;
+                        x = Math.max(-1, Math.min(1, x)); y = Math.max(-1, Math.min(1, y));
+                        pw.style.setProperty("--ry", (x * 9).toFixed(2) + "deg");
+                        pw.style.setProperty("--rx", (-y * 7).toFixed(2) + "deg");
+                        pw.style.setProperty("--px", x.toFixed(3)); pw.style.setProperty("--py", y.toFixed(3));
+                    };
+                    hg.addEventListener("pointermove", function (e) { pe = e; pw.classList.add("on"); if (!pr) pr = requestAnimationFrame(pf); }, { passive: true });
+                    hg.addEventListener("pointerleave", function () {
+                        pw.classList.remove("on");
+                        ["--rx", "--ry", "--px", "--py"].forEach(function (k) { pw.style.removeProperty(k); });
+                    });
+                }
+            }
+
+            /* Canvas: perspective grid floor, chips, wireframe blocks, bits */
+            var cv = $("#bg3d"); if (!cv || !cv.getContext) return;
+            var cx = cv.getContext("2d"), W = 0, H = 0, dpr = 1, small = false;
+            var F = 720, D = 950, FLOOR = 430, mx = 0, my = 0, sx = 0, sy = 0, scroll = 0, t0 = 0, tick = 0;
+            var A = [56, 189, 248], B = [251, 191, 36], K = 1, boxes = [], dots = [], glyphs = [];
+            var rgb = function (s, fb) {
+                var m = /rgba?\(\s*([\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)/.exec(s);
+                if (m) return [+m[1], +m[2], +m[3]];
+                m = /^#([0-9a-f]{6})$/i.exec((s || "").trim());
+                return m ? [parseInt(m[1].slice(0, 2), 16), parseInt(m[1].slice(2, 4), 16), parseInt(m[1].slice(4), 16)] : fb;
+            };
+            var probe = document.createElement("i"); probe.style.display = "none"; document.body.appendChild(probe);
+            var col = function (v, fb) { probe.style.color = "var(" + v + ")"; return rgb(getComputedStyle(probe).color, fb); };
+            var C = function (c, a) { return "rgba(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + "," + Math.min(1, a * K).toFixed(3) + ")"; };
+            var readTheme = function () { A = col("--ac", A); B = col("--ac2", B); K = root.dataset.theme === "light" ? 1.3 : 1; };
+            var rnd = function (a, b) { return a + Math.random() * (b - a); };
+            var VERTS = []; for (var i = 0; i < 8; i++) VERTS.push([(i & 1) ? 1 : -1, (i & 2) ? 1 : -1, (i & 4) ? 1 : -1]);
+            var EDGES = []; for (var a = 0; a < 8; a++) for (var b = 0; b < 3; b++) { var c2 = a ^ (1 << b); if (a < c2) EDGES.push([a, c2]); }
+
+            var rot = function (v, ax, ay) {
+                var y = v[1] * Math.cos(ax) - v[2] * Math.sin(ax), z = v[1] * Math.sin(ax) + v[2] * Math.cos(ax), x = v[0];
+                var x2 = x * Math.cos(ay) + z * Math.sin(ay), z2 = -x * Math.sin(ay) + z * Math.cos(ay);
+                return [x2, y, z2];
+            };
+            var P = function (x, y, z) {
+                x += sx * 60; y += sy * 40 - scroll * .08;
+                var k = F / (F + z + D * .15);
+                return [W / 2 + x * k, H * .5 + y * k, k];
+            };
+
+            var build = function () {
+                small = W < 700;
+                var nb = small ? 5 : 11, nd = small ? 45 : 110, ng = small ? 8 : 18;
+                boxes = []; dots = []; glyphs = [];
+                for (var i = 0; i < nb; i++) boxes.push({
+                    x: rnd(-620, 620), y: rnd(-260, 200), z: rnd(-100, 900), s: rnd(26, 62),
+                    chip: Math.random() < .55, ax: rnd(0, 6), ay: rnd(0, 6), vx: rnd(-.25, .25), vy: rnd(.2, .5), ph: rnd(0, 6),
+                    c: Math.random() < .65 ? 0 : 1
+                });
+                for (i = 0; i < nd; i++) dots.push({ x: rnd(-800, 800), z: rnd(-100, 1100), y: rnd(-380, FLOOR), v: rnd(10, 36), c: Math.random() < .7 ? 0 : 1 });
+                for (i = 0; i < ng; i++) glyphs.push({ x: rnd(-700, 700), z: rnd(0, 1000), y: rnd(-300, FLOOR), v: rnd(14, 30), ch: Math.random() < .5 ? "0" : "1", c: Math.random() < .5 ? 0 : 1 });
+            };
+            var size = function () {
+                dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+                W = innerWidth; H = innerHeight;
+                cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+                cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            };
+
+            var line = function (p, q) { cx.moveTo(p[0], p[1]); cx.lineTo(q[0], q[1]); };
+            var draw = function (time) {
+                var t = time / 1000;
+                cx.clearRect(0, 0, W, H);
+                /* floor grid */
+                cx.lineWidth = 1;
+                var gz0 = -100, gz1 = 1400, step = 100, off = reduce ? 0 : (t * 30) % step;
+                for (var z = gz0 + off; z <= gz1; z += step) {
+                    var fade = 1 - (z - gz0) / (gz1 - gz0);
+                    var l = P(-1600, FLOOR, z), r = P(1600, FLOOR, z);
+                    cx.beginPath(); line(l, r); cx.strokeStyle = C(A, .05 + .16 * fade * fade); cx.stroke();
+                }
+                for (var x = -1600; x <= 1600; x += 160) {
+                    var n = P(x, FLOOR, gz0), f = P(x, FLOOR, gz1);
+                    cx.beginPath(); line(n, f); cx.strokeStyle = C(A, .09); cx.stroke();
+                }
+                /* bits rising from the floor */
+                cx.fillStyle = "#000";
+                dots.forEach(function (d) {
+                    if (!reduce) { d.y -= d.v * (small ? 2 : 1) * .016; if (d.y < -400) d.y = FLOOR; }
+                    var p = P(d.x, d.y, d.z), a = Math.min(1, p[2]) * .55 * Math.min(1, (FLOOR - d.y) / 120);
+                    cx.fillStyle = C(d.c ? B : A, Math.max(0, a));
+                    cx.fillRect(p[0], p[1], 1.5 + p[2], 1.5 + p[2]);
+                });
+                cx.font = "12px ui-monospace,Consolas,monospace"; cx.textAlign = "center";
+                glyphs.forEach(function (g) {
+                    if (!reduce) { g.y -= g.v * (small ? 2 : 1) * .016; if (g.y < -320) { g.y = FLOOR; g.ch = Math.random() < .5 ? "0" : "1"; } }
+                    var p = P(g.x, g.y, g.z);
+                    cx.fillStyle = C(g.c ? B : A, .28 * Math.min(1, p[2]) * Math.min(1, (FLOOR - g.y) / 120));
+                    cx.fillText(g.ch, p[0], p[1]);
+                });
+                /* floating blocks and chips */
+                boxes.slice().sort(function (a, b) { return b.z - a.z; }).forEach(function (b) {
+                    if (!reduce) { b.ax += b.vx * .016; b.ay += b.vy * .016; }
+                    var by = b.y + (reduce ? 0 : Math.sin(t * .8 + b.ph) * 14), c = b.c ? B : A;
+                    var sz = b.chip ? [b.s * 1.5, b.s * .28, b.s * 1.5] : [b.s, b.s, b.s];
+                    var pts = VERTS.map(function (v) {
+                        var q = rot([v[0] * sz[0], v[1] * sz[1], v[2] * sz[2]], b.ax, b.ay);
+                        return P(b.x + q[0], by + q[1], b.z + q[2]);
+                    });
+                    var ce = P(b.x, by, b.z), al = Math.min(1, ce[2] * 1.1);
+                    /* trace down to the floor */
+                    var fl = P(b.x, FLOOR, b.z);
+                    cx.setLineDash([4, 6]); cx.beginPath(); line(ce, fl); cx.strokeStyle = C(c, .16 * al); cx.stroke(); cx.setLineDash([]);
+                    var g = (t * .35 + b.ph) % 1, gp = [ce[0] + (fl[0] - ce[0]) * g, ce[1] + (fl[1] - ce[1]) * g];
+                    if (!reduce) { cx.beginPath(); cx.arc(gp[0], gp[1], 2.2, 0, 6.3); cx.fillStyle = C(c, .8 * al); cx.fill(); }
+                    cx.beginPath(); cx.ellipse(fl[0], fl[1], 26 * fl[2] * (b.s / 40), 7 * fl[2] * (b.s / 40), 0, 0, 6.3); cx.strokeStyle = C(c, .22 * al); cx.stroke();
+                    /* wireframe */
+                    cx.beginPath(); EDGES.forEach(function (e) { line(pts[e[0]], pts[e[1]]); });
+                    cx.lineWidth = 1.3; cx.strokeStyle = C(c, .5 * al); cx.stroke(); cx.lineWidth = 1;
+                    if (b.chip) {
+                        /* pins on the sides of the chip */
+                        cx.beginPath();
+                        for (var i = -2; i <= 2; i++) {
+                            var u = i * .36;
+                            [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(function (s) {
+                                var px = s[0] ? s[0] : u, pz = s[1] ? s[1] : u;
+                                var p0 = rot([px * sz[0], 0, pz * sz[2]], b.ax, b.ay), p1 = rot([px * sz[0] * 1.28, 0, pz * sz[2] * 1.28], b.ax, b.ay);
+                                line(P(b.x + p0[0], by + p0[1], b.z + p0[2]), P(b.x + p1[0], by + p1[1], b.z + p1[2]));
+                            });
+                        }
+                        cx.strokeStyle = C(c, .4 * al); cx.stroke();
+                        /* die on top */
+                        var d = [[-.45, -.45], [.45, -.45], [.45, .45], [-.45, .45]].map(function (s) {
+                            var q = rot([s[0] * sz[0], -sz[1] * 1.05, s[1] * sz[2]], b.ax, b.ay); return P(b.x + q[0], by + q[1], b.z + q[2]);
+                        });
+                        cx.beginPath(); cx.moveTo(d[0][0], d[0][1]); d.slice(1).forEach(function (p) { cx.lineTo(p[0], p[1]); }); cx.closePath();
+                        cx.fillStyle = C(c, .12 * al); cx.fill(); cx.strokeStyle = C(c, .45 * al); cx.stroke();
+                    }
+                });
+            };
+
+            var running = false, loop = function (time) {
+                if (!running) return;
+                requestAnimationFrame(loop);
+                if (small && (tick++ & 1)) return;
+                sx += (mx - sx) * .06; sy += (my - sy) * .06;
+                draw(time);
+            };
+            var start = function () { if (reduce || running || document.hidden) return; running = true; requestAnimationFrame(loop); };
+            var stop = function () { running = false; };
+
+            readTheme(); size(); build(); draw(0);
+            if (!reduce) {
+                addEventListener("pointermove", function (e) { mx = e.clientX / W - .5; my = e.clientY / H - .5; }, { passive: true });
+                addEventListener("scroll", function () { scroll = scrollY; }, { passive: true });
+                document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
+                start();
+            }
+            var lastW = W;
+            addEventListener("resize", function () {
+                var w = innerWidth; size();
+                if (w !== lastW) { lastW = w; build(); }
+                if (reduce) draw(0);
+            });
+            new MutationObserver(function () { readTheme(); if (reduce) draw(0); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+        })();
     })();
 </script>
 </body>
