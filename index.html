@@ -237,7 +237,7 @@
 <script>
     var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
     // One admin only. Leave h empty to create the admin; then paste the line the panel gives you. After that nobody can create another admin.
-    var ADMIN={s:"adm-v1",u:"",h:""};
+    var ADMIN={s:"acufl5gclnjmw4ymnvn",u:"reily",h:"d6d14add295708ff50d87b532134510f323d9326e46bd37070dabaa853d8843e"};
     // Fresh start: remove data saved by the previous version (old admin, edits, viewer accounts, uploads)
     try{["folio_admin","folio_viewers","folio_content","folio_gate_acct"].forEach(function(k){localStorage.removeItem(k)});["folio_in","folio_gate"].forEach(function(k){sessionStorage.removeItem(k)});indexedDB.deleteDatabase("folio")}catch(e){}
     function P(n,t,c,m){return{src:"photos/photo"+n+".jpg",title:t,cat:c,meta:m}}
