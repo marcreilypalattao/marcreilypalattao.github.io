@@ -98,6 +98,7 @@
         #gate .box>p{margin-bottom:6px}
         #gate form{text-align:left}
         #gate .acts{justify-content:center}
+        #gate textarea{width:100%;margin-top:10px;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--teal);font:.8rem ui-monospace,Consolas,monospace;resize:none}
         #adm{position:fixed;inset:0;z-index:95;background:rgba(8,5,16,.8);display:none;place-items:center;padding:18px;overflow:auto}
         #adm.open{display:grid}
         .box{width:min(440px,100%);background:var(--s1);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
@@ -121,11 +122,21 @@
 </head>
 <body class="gated">
 <div id="gate" role="dialog" aria-modal="true" aria-label="Portfolio login">
-    <div class="box"><h1>Russel Heinrich Sawyer</h1><p>Private portfolio. Log in to view.</p>
-        <form id="gForm"><label for="gu">Username</label><input id="gu" autocomplete="username" required>
-            <label for="gp">Password</label><input id="gp" type="password" autocomplete="current-password" required>
-            <div class="msg" id="gMsg" role="status"></div>
-            <div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form></div></div>
+    <div class="box"><h1>Russel Heinrich Sawyer</h1>
+        <div id="gLoginV"><p>Private portfolio. Log in to view.</p>
+            <form id="gForm"><label for="gu">Username</label><input id="gu" autocomplete="username" required>
+                <label for="gp">Password</label><input id="gp" type="password" autocomplete="current-password" required>
+                <div class="msg" id="gMsg" role="status"></div>
+                <div class="acts"><button class="btn fill" type="submit">Open portfolio</button></div></form></div>
+        <div id="gSetupV" class="hidden"><p>Create the username and password visitors will use to open your portfolio.</p>
+            <form id="gSetForm"><label for="nu">Username</label><input id="nu" autocomplete="off" required>
+                <label for="np">Password (at least 8 characters)</label><input id="np" type="password" autocomplete="new-password" required>
+                <label for="np2">Repeat password</label><input id="np2" type="password" autocomplete="new-password" required>
+                <div class="msg" id="nMsg" role="status"></div>
+                <div class="acts"><button class="btn fill" type="submit">Create login</button></div></form>
+            <div id="gDone" class="hidden"><p>Login created. To make it work for visitors, replace the line starting with <b>var GATE=</b> in <b>index.html</b> with this line, then upload the file to GitHub:</p>
+                <textarea id="gCode" readonly rows="4" aria-label="Line to paste into index.html"></textarea>
+                <div class="acts"><button class="btn" id="gCopy" type="button">Copy line</button><button class="btn fill" id="gGo" type="button">Continue to portfolio</button></div></div></div></div></div>
 <nav><div class="wrap"><b>Russel Heinrich Sawyer</b>
     <ul><li><a href="#home">Home</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div></nav>
 
@@ -342,17 +353,30 @@
     openDB().then(function(){ITEMS=STATIC;render();load()});
 
     // ===== Viewer gate (front-door login) =====
-    // To change it, run in the browser console:  gateHash("username","password")  then paste the result into GATE.h
-    var GATE={s:"gate-v1",u:"guest",h:"15e7f670a682fce743f9014fd11664d9d983cd3fe27113b56347cd43b9066c0a"};
-    function gateHash(u,p){return sha(GATE.s+"|"+u.toLowerCase()+"|"+p).then(function(x){console.log(x);return x})}
-    (function(){var g=document.getElementById("gate"),m=document.getElementById("gMsg");
+    // Leave h empty to see the "create login" screen. It prints the line to paste here.
+    var GATE={s:"gate-v1",u:"",h:""};
+    (function(){var g=document.getElementById("gate");
         function open(){g.classList.add("off");document.body.classList.remove("gated");try{sessionStorage.setItem("folio_gate","1")}catch(e){}}
-        try{if(sessionStorage.getItem("folio_gate")==="1"){open();return}}catch(e){}
+        try{if(GATE.h&&sessionStorage.getItem("folio_gate")==="1"){open();return}}catch(e){}
+        function gh(u,p){return sha(GATE.s+"|"+u.toLowerCase()+"|"+p)}
+        var secure=window.crypto&&crypto.subtle;
+        if(!GATE.h){
+            document.getElementById("gLoginV").classList.add("hidden");document.getElementById("gSetupV").classList.remove("hidden");
+            document.getElementById("nu").focus();
+            document.getElementById("gSetForm").onsubmit=function(e){e.preventDefault();var m=document.getElementById("nMsg");
+                var u=document.getElementById("nu").value.trim().toLowerCase(),p=document.getElementById("np").value,p2=document.getElementById("np2").value;
+                if(!secure){m.textContent="Login needs a secure (https) page.";return}
+                if(!u)return m.textContent="Enter a username.";if(p.length<8)return m.textContent="Use a password with at least 8 characters.";if(p!==p2)return m.textContent="The two passwords don’t match.";
+                gh(u,p).then(function(h){document.getElementById("gCode").value='var GATE={s:"'+GATE.s+'",u:'+JSON.stringify(u)+',h:"'+h+'"};';
+                    document.getElementById("gSetForm").classList.add("hidden");document.getElementById("gDone").classList.remove("hidden")})};
+            document.getElementById("gCopy").onclick=function(){var t=document.getElementById("gCode");t.select();try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand("copy")}this.textContent="Copied"};
+            document.getElementById("gGo").onclick=open;
+            return}
         document.getElementById("gu").focus();
-        document.getElementById("gForm").onsubmit=function(e){e.preventDefault();
-            if(!window.crypto||!crypto.subtle){m.textContent="Login needs a secure (https) page.";return}
+        document.getElementById("gForm").onsubmit=function(e){e.preventDefault();var m=document.getElementById("gMsg");
+            if(!secure){m.textContent="Login needs a secure (https) page.";return}
             var u=document.getElementById("gu").value.trim(),p=document.getElementById("gp").value;
-            gateHash(u,p).then(function(h){if(u.toLowerCase()===GATE.u&&h===GATE.h)open();else{m.textContent="Wrong username or password.";document.getElementById("gp").value=""}})}})();
+            gh(u,p).then(function(h){if(u.toLowerCase()===GATE.u&&h===GATE.h)open();else{m.textContent="Wrong username or password.";document.getElementById("gp").value=""}})}})();
 </script>
 </body>
 </html>
