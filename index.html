@@ -254,8 +254,8 @@
     function sbFetchContent(){return fetch(SB.url+"/rest/v1/content?key=eq.main&select=value",{headers:sbH(),cache:"no-store"}).then(function(r){return r.ok?r.json():[]}).then(function(a){return a[0]&&a[0].value})}
     function sbSaveContent(){return sbToken().then(function(t){return fetch(SB.url+"/rest/v1/content?on_conflict=key",{method:"POST",headers:sbH({"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=minimal"},t),body:JSON.stringify({key:"main",value:C})})})
         .then(function(r){if(!r.ok)throw new Error("Couldn’t save online (error "+r.status+"). Check the setup steps.")})}
-    function sbUpload(blob,name,type){return sbToken().then(function(t){return fetch(SB.url+"/storage/v1/object/media/"+name,{method:"POST",headers:sbH({"Content-Type":type||"application/octet-stream","x-upsert":"true"},t),body:blob})})
-        .then(function(r){if(!r.ok)throw new Error("Upload failed (error "+r.status+"). On the free plan each file must be under 50 MB.");return SB.url+"/storage/v1/object/public/media/"+name})}
+    function sbUpload(blob,name,type){return sbToken().then(function(t){return fetch(SB.url+"/storage/v1/object/media/"+name,{method:"POST",headers:sbH({"Content-Type":type||"application/octet-stream"},t),body:blob})})
+        .then(function(r){if(r.ok)return SB.url+"/storage/v1/object/public/media/"+name;return r.text().then(function(t){var m=t;try{m=JSON.parse(t).message||t}catch(e){}throw new Error("Upload failed ("+r.status+"): "+m+(r.status===413?" Each file must be under 50 MB on the free plan.":""))})})}
     function sbRemove(src){var p=SB.url+"/storage/v1/object/public/media/";if(String(src).indexOf(p)!==0)return Promise.resolve();
         return sbToken().then(function(t){return fetch(SB.url+"/storage/v1/object/media/"+src.slice(p.length),{method:"DELETE",headers:sbH({},t)})}).catch(function(){})}
     if(CLOUD){[["gau"],["lu"]].forEach(function(p){var i=document.getElementById(p[0]);i.type="email";document.querySelector('label[for="'+p[0]+'"]').textContent="Admin email"});
