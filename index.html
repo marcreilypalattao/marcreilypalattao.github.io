@@ -145,6 +145,7 @@
         .ai{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--s1);cursor:zoom-in;padding:0;color:inherit}
         .ai img,.ai video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
         .ai:hover{box-shadow:0 0 0 2px var(--rose)}
+        .albm{grid-column:1/-1;font-family:Syne,system-ui,sans-serif;font-size:1.05rem;color:var(--rose);margin-top:10px}
         .hidden{display:none!important}
         @media(max-width:860px){
             .hero .wrap,.about,.contact{grid-template-columns:1fr}
@@ -404,7 +405,13 @@
         var adminOn=document.body.classList.contains("admin");ITEMS=local.concat(pv,C.gallery.filter(function(x){return!(x.locked&&adminOn)})).sort(byName);render()})}
     // Order: private albums first, then public ones; each group A to Z by title (items with the same title stay together as one album)
     function rank(x){return(x.priv||x.locked)?0:1}
-    function byName(a,b){return rank(a)-rank(b)||String(a.title||"").localeCompare(String(b.title||""),undefined,{numeric:true,sensitivity:"base"})}
+    // Month and year from the "Date or note" text, e.g. "November 2025" (oldest = smallest). No date = last.
+    var MON=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+    function dateVal(m){m=String(m||"");var y=m.match(/(?:19|20)\d{2}/),mo=m.match(/jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i);
+        if(!y&&!mo)return Infinity;return(y?+y[0]:0)*12+(mo?MON.indexOf(mo[0].toLowerCase()):0)}
+    function byName(a,b){var r=rank(a)-rank(b);if(r)return r;
+        r=String(a.title||"").localeCompare(String(b.title||""),undefined,{numeric:true,sensitivity:"base"});if(r)return r;
+        var x=dateVal(a.meta),y=dateVal(b.meta);return x===y?0:(x<y?-1:1)}
 
     // 3D ring (hero)
     function buildRing(){var ring=document.getElementById("ring");ring.innerHTML="";
@@ -441,8 +448,8 @@
     function openAlbum(g){albList=g;var it=ITEMS[g[0]];albF=document.activeElement;
         document.getElementById("albt").textContent=it.title;
         document.getElementById("albd").textContent=it.cat+" · "+g.length+(it.cat==="Videos"?" videos":" photos")+" · Click one to view it large";
-        var box=document.getElementById("albg");box.innerHTML="";
-        g.forEach(function(j,n){var x=ITEMS[j],b=el("button","ai",thumb(x)+(x.type==="video"?'<span class="play" aria-hidden="true"></span>':''));b.type="button";b.setAttribute("aria-label","Open "+x.title+" "+(n+1)+" of "+g.length);
+        var box=document.getElementById("albg"),lastM="";box.innerHTML="";
+        g.forEach(function(j,n){var x=ITEMS[j];if(x.meta&&x.meta!==lastM){box.appendChild(el("h4","albm",esc(x.meta)));lastM=x.meta}var b=el("button","ai",thumb(x)+(x.type==="video"?'<span class="play" aria-hidden="true"></span>':''));b.type="button";b.setAttribute("aria-label","Open "+x.title+" "+(n+1)+" of "+g.length);
             var im=b.querySelector("img");if(im)im.addEventListener("error",function(){this.style.display="none"});
             b.onclick=function(){openLb(j,albList)};box.appendChild(b)});
         albEl.classList.add("open");albEl.scrollTop=0;document.body.style.overflow="hidden";document.getElementById("albx").focus()}
