@@ -128,6 +128,10 @@
         .card.album:hover{box-shadow:7px 7px 0 -1px var(--s2),14px 14px 0 -2px var(--line),0 26px 50px rgba(0,0,0,.55)}
         .sec{margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
         .sec h4{font-family:Syne;font-size:1.05rem}.sec p{color:var(--mut);font-size:.88rem;margin:4px 0 0}
+        .vrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+        .vrow small{display:block;color:var(--mut)}
+        .vact{display:flex;gap:6px;flex-wrap:wrap}
+        .vact .btn{padding:6px 12px;font-size:.8rem}
         .hidden{display:none!important}
         @media(max-width:860px){
             .hero .wrap,.about,.contact{grid-template-columns:1fr}
@@ -216,7 +220,7 @@
             <label class="chk hidden" id="aplw"><input type="checkbox" id="apl"> Show a locked card to visitors (title only, no photos)</label>
             <div class="acts"><button class="btn fill" id="bAdd" type="button">Add to gallery</button><button class="btn" id="bOut" type="button">Log out</button><button class="btn" data-close type="button">Close</button></div>
             <div class="sec"><h4>Edit the site</h4><p id="secP">You can edit everything: text, links and every gallery item (use the pencil on a card). Edits show on this device. To show them to everyone, download content.json and upload it to GitHub next to index.html.</p>
-                <div class="acts"><button class="btn" id="bEdit" type="button">Edit text &amp; links</button><button class="btn" id="bAddFile" type="button">Add file from GitHub</button><button class="btn" id="bExport" type="button">Download content.json</button><button class="btn" id="bReset" type="button">Reset my edits</button></div></div>
+                <div class="acts"><button class="btn" id="bEdit" type="button">Edit text &amp; links</button><button class="btn" id="bVis" type="button">Visitor requests</button><button class="btn" id="bAddFile" type="button">Add file from GitHub</button><button class="btn" id="bExport" type="button">Download content.json</button><button class="btn" id="bReset" type="button">Reset my edits</button></div></div>
             <div class="sec hidden" id="aLock"><h4>Make this the only admin</h4><p>Right now anyone could create an admin on their own device. Replace the line starting with <b>var ADMIN=</b> in <b>index.html</b> with this line, then upload the file to GitHub. After that, nobody else can create an admin.</p>
                 <textarea id="aCode" readonly rows="3" aria-label="Line to paste into index.html"></textarea>
                 <div class="acts"><button class="btn" id="aCopy" type="button">Copy line</button></div></div></div>
@@ -243,6 +247,7 @@
             <label for="i_meta">Date or note</label><input id="i_meta">
             <label class="chk hidden" id="ilkw"><input type="checkbox" id="ilk"> Show a locked card to visitors (title only, no photos)</label>
             <div class="acts"><button class="btn fill" id="iSave" type="button">Save</button><button class="btn" id="iDel" type="button">Remove</button><button class="btn hidden" id="iDelAlb" type="button">Remove whole album</button><button class="btn" id="iBack" type="button">Back</button></div></div>
+        <div id="vVis" class="hidden"><h3>Visitor requests</h3><p>Approve or reject people who asked to view your portfolio.</p><div id="visList"></div><div class="acts"><button class="btn" id="visBack" type="button">Back</button></div></div>
         <div class="msg" id="msg" role="status"></div>
     </div></div>
 
@@ -285,6 +290,21 @@
             return fetch(SB.url+"/storage/v1/object/sign/private",{method:"POST",headers:sbH({"Content-Type":"application/json"},t),body:JSON.stringify({expiresIn:3600,paths:paths})}).then(function(r){return r.ok?r.json():[]}).then(function(list){
                 var m={};list.forEach(function(x){if(x.signedURL)m[x.path]=SB.url+"/storage/v1"+x.signedURL});PR.gallery.forEach(function(x){x.url=m[x.src]||""})})})}).catch(function(){})}
 
+    function sbIsAdmin(){return sbToken().then(function(t){return fetch(SB.url+"/rest/v1/rpc/is_admin",{method:"POST",headers:sbH({"Content-Type":"application/json"},t),body:"{}"})}).then(function(r){return r.ok?r.json():false}).catch(function(){return false})}
+    function sbAdminLogin(email,pw){return sbLogin(email,pw).then(sbIsAdmin).then(function(ok){if(!ok){sbSetSess(null);throw new Error("This account is not the admin.")}})}
+    function vEmail(u){return u.trim().toLowerCase()+"@visitors.myportfolio.app"}
+    function sbVAuth(kind,email,pw){return fetch(SB.url+"/auth/v1/"+(kind==="up"?"signup":"token?grant_type=password"),{method:"POST",headers:sbH({"Content-Type":"application/json"}),body:JSON.stringify({email:email,password:pw})})
+        .then(function(r){return r.json().then(function(j){if(!r.ok||!j.access_token){var m=((j.msg||j.message||j.error_description||"")+" "+(j.error_code||"")).toLowerCase();
+            throw new Error(/already|registered/.test(m)?"That username is taken. Choose another.":(/invalid/.test(m)?"Wrong username or password.":(kind==="up"?"Couldn’t create the request. The owner needs to check the Supabase sign-up settings.":"Login failed. Try again.")))}return j})})}
+    function visCount(){if(!CLOUD||!sbSess())return;sbToken().then(function(t){return fetch(SB.url+"/rest/v1/visitors?status=eq.pending&select=id",{headers:sbH({},t),cache:"no-store"})}).then(function(r){return r.ok?r.json():[]}).then(function(a){$("bVis").textContent="Visitor requests"+(a.length?" ("+a.length+" new)":"")}).catch(function(){})}
+    function visSet(id,st){return sbToken().then(function(t){return fetch(SB.url+"/rest/v1/visitors?id=eq."+id,st?{method:"PATCH",headers:sbH({"Content-Type":"application/json",Prefer:"return=minimal"},t),body:JSON.stringify({status:st})}:{method:"DELETE",headers:sbH({},t)})}).then(function(r){if(!r.ok)throw new Error("Couldn’t update. Did you run the visitor setup SQL?")})}
+    function loadVis(){var box=$("visList");box.textContent="Loading…";
+        sbToken().then(function(t){return fetch(SB.url+"/rest/v1/visitors?select=id,username,status,created_at&order=created_at.desc",{headers:sbH({},t),cache:"no-store"})}).then(function(r){if(!r.ok)throw new Error("Couldn’t load requests. Did you run the visitor setup SQL?");return r.json()}).then(function(a){
+            box.innerHTML="";if(!a.length){box.textContent="No visitor requests yet.";return}
+            a.forEach(function(v){var row=el("div","vrow",'<div><b>'+esc(v.username)+'</b><small>'+esc(v.status)+' · '+esc(new Date(v.created_at).toLocaleDateString())+'</small></div>'),act=el("div","vact");
+                [["Approve","approved"],["Reject","rejected"],["Remove",null]].forEach(function(x){if(x[1]&&v.status===x[1])return;var b=el("button","btn",x[0]);b.type="button";
+                    b.onclick=function(){if(!x[1]&&!confirm("Remove "+v.username+" from the list?"))return;visSet(v.id,x[1]).then(function(){loadVis();visCount()}).catch(function(e){say(e.message)})};act.appendChild(b)});
+                row.appendChild(act);box.appendChild(row)})}).catch(function(e){box.textContent=e.message})}
     function lockKey(c,t){return(c+"|"+String(t).trim()).toLowerCase()}
     function addLock(it){if(C.gallery.some(function(x){return x.locked&&lockKey(x.cat,x.title)===lockKey(it.cat,it.title)}))return false;C.gallery.unshift({locked:true,title:it.title,cat:it.cat,meta:it.meta||"",src:""});return true}
     function dropLock(cat,title){if(PR.gallery.some(function(x){return lockKey(x.cat,x.title)===lockKey(cat,title)}))return;var n=C.gallery.length;C.gallery=C.gallery.filter(function(x){return!(x.locked&&lockKey(x.cat,x.title)===lockKey(cat,title))});if(C.gallery.length!==n)save()}
@@ -292,6 +312,8 @@
         document.getElementById("bReset").classList.add("hidden");
         document.getElementById("secP").textContent="Everything you change here is saved online and shows on every device. You can edit text, links and every gallery item (use the pencil on a card)."}
     else document.getElementById("apvw").classList.add("hidden");
+    if(CLOUD){document.querySelector("#gV-signup>p").textContent="Create a username and password to request access. The owner will approve it first.";document.querySelector("#fSignup .btn").textContent="Request access"}
+    else document.getElementById("bVis").classList.add("hidden");
     document.getElementById("apv").onchange=function(){document.getElementById("aplw").classList.toggle("hidden",!this.checked)};
 
     // Fresh start: remove data saved by the previous version (old admin, edits, viewer accounts, uploads)
@@ -400,7 +422,7 @@
     // ===== Admin =====
     var adm=document.getElementById("adm"),msg=document.getElementById("msg");
     function say(t,ok){msg.textContent=t||"";msg.className="msg"+(ok?" ok":"")}
-    function view(n){["vSetup","vLogin","vPanel","vEdit","vItem"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("");if(n==="vPanel")showLock()}
+    function view(n){["vSetup","vLogin","vPanel","vEdit","vItem","vVis"].forEach(function(v){document.getElementById(v).classList.toggle("hidden",v!==n)});say("");if(n==="vPanel"){showLock();visCount()}}
     function sha(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest("SHA-256",b).then(function(h){return[].map.call(new Uint8Array(h),function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
     function hashPw(u,p,salt){return sha(salt+"|"+u.toLowerCase()+"|"+p)}
     function getAcct(){if(CLOUD)return{cloud:1};if(ADMIN.h)return{u:ADMIN.u,s:ADMIN.s,h:ADMIN.h};try{return JSON.parse(localStorage.getItem("folio2_admin")||"null")}catch(e){return null}}
@@ -421,7 +443,7 @@
         hashPw(u,p,salt).then(function(h){localStorage.setItem("folio2_admin",JSON.stringify({u:u.toLowerCase(),s:salt,h:h}));setAdmin(true);view("vPanel");say("Admin created. You’re logged in.",true)})};
     document.getElementById("bLogin").onclick=function(){
         var a=getAcct(),u=document.getElementById("lu").value.trim(),p=document.getElementById("lp").value;
-        if(CLOUD){say("Logging in…",true);return sbLogin(u,p).then(function(){setAdmin(true);document.getElementById("lp").value="";view("vPanel");sbLoadPrivate().then(load)}).catch(function(err){say(err.message)})}
+        if(CLOUD){say("Logging in…",true);return sbAdminLogin(u,p).then(function(){setAdmin(true);document.getElementById("lp").value="";view("vPanel");sbLoadPrivate().then(load)}).catch(function(err){say(err.message)})}
         if(!a)return view("vSetup");
         hashPw(u,p,a.s).then(function(h){if(u.toLowerCase()===a.u&&h===a.h){setAdmin(true);document.getElementById("lp").value="";view("vPanel")}else say("Wrong username or password.")})};
     document.getElementById("bOut").onclick=function(){if(CLOUD)sbSetSess(null);setAdmin(false);PR={gallery:[]};load();closeAdm()};
@@ -485,6 +507,7 @@
         $("iNote").textContent=editPriv?"This item is private. You can rename it or remove it.":"The file path is where the file sits in your GitHub repo, for example photos/photo40.jpg.";
         $("iTitleH").textContent=!editRef?"Add a file from your GitHub photos folder":(editPriv?"Edit private item":"Edit item");$("iDel").classList.toggle("hidden",!editRef);editKey=it?groupKey(it):null;var an=editKey?ITEMS.filter(function(x){return groupKey(x)===editKey}).length:0;$("iDelAlb").classList.toggle("hidden",an<2);$("iDelAlb").textContent="Remove whole album ("+an+")";
         lastF=document.activeElement;adm.classList.add("open");view("vItem")}
+    $("bVis").onclick=function(){view("vVis");loadVis()};$("visBack").onclick=function(){view("vPanel")};
     $("bAddFile").onclick=function(){openItem(null)};
     $("iBack").onclick=closeAdm;
     $("iSave").onclick=function(){
@@ -532,15 +555,20 @@
         document.getElementById("fSignup").onsubmit=function(e){e.preventDefault();if(!ok())return;
             var u=val("gsu").trim().toLowerCase(),p=val("gsp"),p2=val("gsp2"),list=viewers();
             if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
+            if(CLOUD){if(!/^[a-z0-9._-]{3,30}$/.test(u))return say("Username: 3 to 30 letters, numbers, dots, dashes or underscores.");say("Sending request…",true);
+                sbVAuth("up",vEmail(u),p).then(function(j){return fetch(SB.url+"/rest/v1/visitors",{method:"POST",headers:sbH({"Content-Type":"application/json",Prefer:"return=minimal"},j.access_token),body:JSON.stringify({id:j.user.id,username:u})}).then(function(r){if(!r.ok)throw new Error("Couldn’t send your request. Did the owner run the visitor setup SQL?")})})
+                    .then(function(){go("login","Request sent. You can log in once the owner approves it.")}).catch(function(err){say(err.message)});return}
             if(list.some(function(x){return x.u===u}))return say("That username is taken. Choose another.");
             var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
             hashPw(u,p,salt).then(function(h){list.push({u:u,s:salt,h:h});try{localStorage.setItem("folio2_viewers",JSON.stringify(list))}catch(x){}go("login","Account created. Now log in to view the portfolio.")})};
         document.getElementById("fLogin").onsubmit=function(e){e.preventDefault();if(!ok())return;
             var u=val("glu").trim().toLowerCase(),p=val("glp"),acct=viewers().filter(function(x){return x.u===u})[0];
             function bad(){say("Wrong username or password.");document.getElementById("glp").value=""}
+            if(CLOUD){say("Checking…",true);sbVAuth("in",vEmail(u),p).then(function(j){return fetch(SB.url+"/rest/v1/visitors?id=eq."+j.user.id+"&select=status",{headers:sbH({},j.access_token),cache:"no-store"}).then(function(r){return r.ok?r.json():[]}).then(function(a){var st=a[0]&&a[0].status;
+                if(st==="approved")return open();if(st==="rejected")return say("Your request was not approved.");if(st==="pending")return say("Your request is still waiting for approval.");say("No access request found for this account.")})}).catch(function(err){say(err.message);document.getElementById("glp").value=""});return}
             if(!acct)return bad();hashPw(u,p,acct.s).then(function(h){h===acct.h?open():bad()})};
         document.getElementById("fAdmin").onsubmit=function(e){e.preventDefault();if(!ok())return;
-            if(CLOUD){say("Logging in…",true);sbLogin(val("gau").trim(),val("gap")).then(function(){setAdmin(true);open();sbLoadPrivate().then(load)}).catch(function(err){say(err.message);document.getElementById("gap").value=""});return}
+            if(CLOUD){say("Logging in…",true);sbAdminLogin(val("gau").trim(),val("gap")).then(function(){setAdmin(true);open();sbLoadPrivate().then(load)}).catch(function(err){say(err.message);document.getElementById("gap").value=""});return}
             var u=val("gau").trim().toLowerCase(),p=val("gap"),a=getAcct();if(!a)return go("asetup");
             hashPw(u,p,a.s).then(function(h){if(u===a.u&&h===a.h){setAdmin(true);open()}else{say("Wrong admin username or password.");document.getElementById("gap").value=""}})};
         document.getElementById("fASetup").onsubmit=function(e){e.preventDefault();if(!ok())return;if(ADMIN.h)return say("An admin already exists.");
