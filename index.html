@@ -136,6 +136,15 @@
         .vrow small{display:block;color:var(--mut)}
         .vact{display:flex;gap:6px;flex-wrap:wrap}
         .vact .btn{padding:6px 12px;font-size:.8rem}
+        #alb{position:fixed;inset:0;z-index:85;background:rgba(8,5,16,.97);display:none;overflow:auto;padding:0 20px 30px}
+        #alb.open{display:block}
+        .albw{max-width:1140px;margin:0 auto}
+        .albh{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 0 16px;background:rgba(8,5,16,.97)}
+        .albh h3{font-size:1.5rem}.albh p{color:var(--teal);font-size:.9rem}
+        .albg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+        .ai{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--s1);cursor:zoom-in;padding:0;color:inherit}
+        .ai img,.ai video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .ai:hover{box-shadow:0 0 0 2px var(--rose)}
         .hidden{display:none!important}
         @media(max-width:860px){
             .hero .wrap,.about,.contact{grid-template-columns:1fr}
@@ -205,6 +214,8 @@
 <footer>© 2026 <span id="fName">Russel Heinrich Sawyer</span><button id="admOpen" type="button">Admin</button></footer>
 
 <div id="lb" role="dialog" aria-modal="true" aria-label="Viewer"><div class="lbs"><button class="lbb" id="lbx" aria-label="Close">&times;</button><button class="lbb hidden" id="lbe" aria-label="Edit this item" style="top:0;right:56px">&#9998;</button><button class="lbb" id="lbp" aria-label="Previous">&#8249;</button><div id="lbm"></div><button class="lbb" id="lbn" aria-label="Next">&#8250;</button></div><div class="lbi"><h3 id="lbt"></h3><p id="lbd"></p></div></div>
+
+<div id="alb" role="dialog" aria-modal="true" aria-label="Album"><div class="albw"><div class="albh"><div><h3 id="albt"></h3><p id="albd"></p></div><button class="lbb" id="albx" type="button" aria-label="Close album" style="position:static;flex:none">&times;</button></div><div class="albg" id="albg"></div></div></div>
 
 <div id="adm" role="dialog" aria-modal="true" aria-label="Admin">
     <div class="box">
@@ -382,7 +393,7 @@
             if(it.local){var d=el("span","del","&times;");d.setAttribute("role","button");d.setAttribute("aria-label","Delete "+it.title);d.tabIndex=0;
                 var go=function(ev){ev.stopPropagation();if(confirm("Delete “"+it.title+"”?"))dbDel(it.id).then(load)};
                 d.onclick=go;d.onkeydown=function(ev){if(ev.key==="Enter")go(ev)};b.appendChild(d)}else{var e2=el("span","edt","&#9998;");e2.setAttribute("role","button");e2.setAttribute("aria-label","Edit "+it.title);e2.tabIndex=0;var ed=function(ev){ev.stopPropagation();openItem(it)};e2.onclick=ed;e2.onkeydown=function(ev){if(ev.key==="Enter")ed(ev)};b.appendChild(e2)}
-            b.onclick=it.locked?function(){openLocked(it)}:function(){openLb(i,alb?g:null)};tilt(b,14);grid.appendChild(b)});
+            b.onclick=it.locked?function(){openLocked(it)}:function(){if(alb)openAlbum(g);else openLb(i,null)};tilt(b,14);grid.appendChild(b)});
         grid.appendChild(el("p","empty hide","Nothing in this category yet."));
         applyFilter();buildRing()}
     function load(){dbAll().then(function(rows){
@@ -413,7 +424,7 @@
         document.getElementById("lbd").textContent=(it.priv?"Private · ":"")+it.cat+(it.meta?" · "+it.meta:"")+(gg.length>1?" · "+(gg.indexOf(i)+1)+" of "+gg.length:"");
         document.getElementById("lbe").classList.toggle("hidden",!(document.body.classList.contains("admin")&&!it.local))}
     function openLb(i,list){navList=list||(function(){var g=groupOf(i);return g.length>1?g:vis()})();if(navList.indexOf(i)<0)navList=[i];lastF=document.activeElement;lb.classList.add("open");document.body.style.overflow="hidden";showLb(i);document.getElementById("lbx").focus()}
-    function closeLb(){lb.classList.remove("open");lbm.innerHTML="";document.body.style.overflow="";if(lastF)lastF.focus()}
+    function closeLb(){lb.classList.remove("open");lbm.innerHTML="";document.body.style.overflow=(albEl&&albEl.classList.contains("open"))?"hidden":"";if(lastF)lastF.focus()}
     function mv(d){var v=navList;if(v.length<2)return;var k=v.indexOf(cur);if(k<0)k=0;showLb(v[(k+d+v.length)%v.length])}
     function openLocked(it){navList=[];cur=-1;lastF=document.activeElement;lb.classList.add("open");document.body.style.overflow="hidden";
         ["lbp","lbn","lbe"].forEach(function(id){document.getElementById(id).classList.add("hidden")});
@@ -421,7 +432,20 @@
         document.getElementById("lbt").textContent=it.title;document.getElementById("lbd").textContent="Private album";document.getElementById("lbx").focus()}
     document.getElementById("lbx").onclick=closeLb;document.getElementById("lbe").onclick=function(){var it=ITEMS[cur];if(!it||it.local)return;closeLb();openItem(it)};document.getElementById("lbp").onclick=function(){mv(-1)};document.getElementById("lbn").onclick=function(){mv(1)};
     lb.addEventListener("click",function(e){if(e.target===lb||e.target.classList.contains("lbs"))closeLb()});
-    document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(lb.classList.contains("open"))closeLb();else closeAdm()}
+    // Album view: opening an album shows all its photos together; click one to view it large
+    var albEl=document.getElementById("alb"),albList=[],albF=null;
+    function openAlbum(g){albList=g;var it=ITEMS[g[0]];albF=document.activeElement;
+        document.getElementById("albt").textContent=it.title;
+        document.getElementById("albd").textContent=it.cat+" · "+g.length+(it.cat==="Videos"?" videos":" photos")+" · Click one to view it large";
+        var box=document.getElementById("albg");box.innerHTML="";
+        g.forEach(function(j,n){var x=ITEMS[j],b=el("button","ai",thumb(x)+(x.type==="video"?'<span class="play" aria-hidden="true"></span>':''));b.type="button";b.setAttribute("aria-label","Open "+x.title+" "+(n+1)+" of "+g.length);
+            var im=b.querySelector("img");if(im)im.addEventListener("error",function(){this.style.display="none"});
+            b.onclick=function(){openLb(j,albList)};box.appendChild(b)});
+        albEl.classList.add("open");albEl.scrollTop=0;document.body.style.overflow="hidden";document.getElementById("albx").focus()}
+    function closeAlbum(){if(!albEl.classList.contains("open"))return;albEl.classList.remove("open");document.getElementById("albg").innerHTML="";document.body.style.overflow="";if(albF&&albF.focus)albF.focus()}
+    document.getElementById("albx").onclick=closeAlbum;
+    albEl.addEventListener("click",function(e){if(e.target===albEl)closeAlbum()});
+    document.addEventListener("keydown",function(e){if(e.key==="Escape"){if(lb.classList.contains("open"))closeLb();else if(albEl.classList.contains("open"))closeAlbum();else closeAdm()}
         if(!lb.classList.contains("open"))return;if(e.key==="ArrowLeft")mv(-1);if(e.key==="ArrowRight")mv(1)});
 
     // ===== Admin =====
