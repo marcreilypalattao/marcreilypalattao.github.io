@@ -237,7 +237,7 @@
                 <label for="i_cat">Category</label><select id="i_cat"><option>Photography</option><option>Videos</option></select></div>
             <label for="i_title">Title</label><input id="i_title">
             <label for="i_meta">Date or note</label><input id="i_meta">
-            <div class="acts"><button class="btn fill" id="iSave" type="button">Save</button><button class="btn" id="iDel" type="button">Remove</button><button class="btn" id="iBack" type="button">Back</button></div></div>
+            <div class="acts"><button class="btn fill" id="iSave" type="button">Save</button><button class="btn" id="iDel" type="button">Remove</button><button class="btn hidden" id="iDelAlb" type="button">Remove whole album</button><button class="btn" id="iBack" type="button">Back</button></div></div>
         <div class="msg" id="msg" role="status"></div>
     </div></div>
 
@@ -463,13 +463,13 @@
     $("bEditSave").onclick=function(){var s=C.site;FE.forEach(function(p){s[p[1]]=$(p[0]).value.trim()});FL.forEach(function(p){s.links[p[1]]=$(p[0]).value.trim()});
         FA.forEach(function(p){s[p[1]]=$(p[0]).value.split("\n").map(function(x){return x.trim()}).filter(Boolean)});
         if(!s.roles.length)s.roles=["Photographer"];save();applySite();view("vPanel");say(CLOUD?"Saved online. Other devices show it when they refresh.":"Site updated.",true)};
-    var editRef=null,editPriv=false;
+    var editRef=null,editPriv=false,editKey=null;
     function openItem(it){editPriv=!!(it&&it.priv);editRef=it?(editPriv?it.ref:it):null;
         var cur=editRef||{src:"photos/",cat:"Photography",title:"",meta:""};
         $("i_src").value=cur.src;$("i_cat").value=cur.cat;$("i_title").value=cur.title;$("i_meta").value=cur.meta||"";
         $("fSrc").classList.toggle("hidden",editPriv);
         $("iNote").textContent=editPriv?"This item is private. You can rename it or remove it.":"The file path is where the file sits in your GitHub repo, for example photos/photo40.jpg.";
-        $("iTitleH").textContent=!editRef?"Add a file from your GitHub photos folder":(editPriv?"Edit private item":"Edit item");$("iDel").classList.toggle("hidden",!editRef);
+        $("iTitleH").textContent=!editRef?"Add a file from your GitHub photos folder":(editPriv?"Edit private item":"Edit item");$("iDel").classList.toggle("hidden",!editRef);editKey=it?groupKey(it):null;var an=editKey?ITEMS.filter(function(x){return groupKey(x)===editKey}).length:0;$("iDelAlb").classList.toggle("hidden",an<2);$("iDelAlb").textContent="Remove whole album ("+an+")";
         lastF=document.activeElement;adm.classList.add("open");view("vItem")}
     $("bAddFile").onclick=function(){openItem(null)};
     $("iBack").onclick=closeAdm;
@@ -485,6 +485,13 @@
     $("iDel").onclick=function(){
         if(editPriv){if(confirm("Delete this private item and its file permanently?")){var k=PR.gallery.indexOf(editRef);if(k>=0)PR.gallery.splice(k,1);sbRemovePriv(editRef.src);savePrivate().catch(function(e){alert(e.message)});load();closeAdm()}return}
         if(confirm("Remove this item from the gallery? The file stays in your photos folder on GitHub.")){var ix=C.gallery.indexOf(editRef),gone=ix>=0?C.gallery.splice(ix,1)[0]:null;save();if(CLOUD&&gone)sbRemove(gone.src);load();closeAdm()}};
+    $("iDelAlb").onclick=function(){if(!editKey)return;
+        var list=editPriv?PR.gallery:C.gallery,gone=list.filter(function(x){return groupKey(x)===editKey});
+        if(!gone.length||!confirm("Remove this whole album ("+gone.length+" items)? "+(editPriv?"The private files will be deleted permanently.":"Uploaded files will be deleted; files in your GitHub photos folder stay there.")))return;
+        for(var i=list.length-1;i>=0;i--)if(groupKey(list[i])===editKey)list.splice(i,1);
+        if(editPriv){gone.forEach(function(x){sbRemovePriv(x.src)});savePrivate().catch(function(e){alert(e.message)})}
+        else{save();if(CLOUD)gone.forEach(function(x){sbRemove(x.src)})}
+        load();closeAdm()};
     $("bExport").onclick=function(){var b=new Blob([JSON.stringify(C,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="content.json";document.body.appendChild(a);a.click();a.remove();
         say("Downloaded content.json (public items only). Upload it to GitHub next to index.html to show your edits to everyone.",true)};
     $("bReset").onclick=function(){if(confirm("Discard the edits saved in this browser and go back to the published version?")){try{localStorage.removeItem("folio2_content")}catch(e){}location.reload()}};
