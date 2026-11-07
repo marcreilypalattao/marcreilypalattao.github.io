@@ -401,7 +401,10 @@
         ITEMS.forEach(function(x){if(x.local&&x.url)URL.revokeObjectURL(x.url)});
         var local=rows.map(function(r){return{id:r.id,local:true,type:r.kind==="video"?"video":"",url:URL.createObjectURL(r.blob),title:r.title,cat:r.kind==="video"?"Videos":"Photography",meta:r.meta}}).reverse();
         var pv=(CLOUD&&document.body.classList.contains("admin"))?PR.gallery.map(function(x){return{type:x.type,src:x.url||"",poster:"",title:x.title,cat:x.cat,meta:x.meta,priv:true,ref:x}}):[];
-        var adminOn=document.body.classList.contains("admin");ITEMS=local.concat(pv,C.gallery.filter(function(x){return!(x.locked&&adminOn)}));render()})}
+        var adminOn=document.body.classList.contains("admin");ITEMS=local.concat(pv,C.gallery.filter(function(x){return!(x.locked&&adminOn)})).sort(byName);render()})}
+    // Order: private albums first, then public ones; each group A to Z by title (items with the same title stay together as one album)
+    function rank(x){return(x.priv||x.locked)?0:1}
+    function byName(a,b){return rank(a)-rank(b)||String(a.title||"").localeCompare(String(b.title||""),undefined,{numeric:true,sensitivity:"base"})}
 
     // 3D ring (hero)
     function buildRing(){var ring=document.getElementById("ring");ring.innerHTML="";
@@ -578,7 +581,7 @@
     $("bReset").onclick=function(){if(confirm("Discard the edits saved in this browser and go back to the published version?")){try{localStorage.removeItem("folio2_content")}catch(e){}location.reload()}};
 
     try{if(CLOUD?sbSess():(sessionStorage.getItem("folio2_in")&&getAcct()))document.body.classList.add("admin")}catch(e){}
-    initContent().then(sbLoadPrivate).then(openDB).then(function(){applySite();ITEMS=C.gallery;render();load()});
+    initContent().then(sbLoadPrivate).then(openDB).then(function(){applySite();ITEMS=C.gallery.slice().sort(byName);render();load()});
 
     // ===== Front door: visitors create an account; admin logs in with the admin account =====
     (function(){var g=document.getElementById("gate"),msg=document.getElementById("gMsg"),secure=window.crypto&&crypto.subtle;
