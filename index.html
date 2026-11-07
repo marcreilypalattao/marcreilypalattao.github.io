@@ -261,6 +261,7 @@
                 <label for="i_cat">Category</label><select id="i_cat"><option>Photography</option><option>Videos</option></select></div>
             <label for="i_title">Title</label><input id="i_title">
             <label for="i_meta">Date or note</label><input id="i_meta">
+            <label class="chk hidden" id="ialbw"><input type="checkbox" id="ialb" checked> <span id="ialbt">Apply the title and date to the whole album</span></label>
             <label class="chk hidden" id="ilkw"><input type="checkbox" id="ilk"> Show a locked card to visitors (title only, no photos)</label>
             <div class="acts"><button class="btn fill" id="iSave" type="button">Save</button><button class="btn" id="iDel" type="button">Remove</button><button class="btn hidden" id="iDelAlb" type="button">Remove whole album</button><button class="btn" id="iBack" type="button">Back</button></div></div>
         <div id="vVis" class="hidden"><h3>Visitor requests</h3><p>Approve or reject people who asked to view your portfolio.</p><div id="visList"></div><div class="acts"><button class="btn" id="visBack" type="button">Back</button></div></div>
@@ -543,13 +544,14 @@
         $("i_src").value=cur.src;$("i_cat").value=cur.cat;$("i_title").value=cur.title;$("i_meta").value=cur.meta||"";
         $("fSrc").classList.toggle("hidden",editPriv);$("ilkw").classList.toggle("hidden",!editPriv);if(editPriv)$("ilk").checked=C.gallery.some(function(x){return x.locked&&lockKey(x.cat,x.title)===lockKey(cur.cat,cur.title)});
         $("iNote").textContent=editPriv?"This item is private. You can rename it or remove it.":"The file path is where the file sits in your GitHub repo, for example photos/photo40.jpg.";
-        $("iTitleH").textContent=!editRef?"Add a file from your GitHub photos folder":(editPriv?"Edit private item":"Edit item");$("iDel").classList.toggle("hidden",!editRef);editKey=it?groupKey(it):null;var an=editKey?ITEMS.filter(function(x){return groupKey(x)===editKey}).length:0;$("iDelAlb").classList.toggle("hidden",an<2);$("iDelAlb").textContent="Remove whole album ("+an+")";
+        $("iTitleH").textContent=!editRef?"Add a file from your GitHub photos folder":(editPriv?"Edit private item":"Edit item");$("iDel").classList.toggle("hidden",!editRef);editKey=it?groupKey(it):null;var an=editKey?ITEMS.filter(function(x){return groupKey(x)===editKey}).length:0;$("iDelAlb").classList.toggle("hidden",an<2);$("iDelAlb").textContent="Remove whole album ("+an+")";$("ialbw").classList.toggle("hidden",an<2);$("ialb").checked=true;$("ialbt").textContent="Apply the title and date to the whole album ("+an+" items)";
         lastF=document.activeElement;adm.classList.add("open");view("vItem")}
     $("bVis").onclick=function(){view("vVis");loadVis()};$("visBack").onclick=function(){view("vPanel")};
     $("bAddFile").onclick=function(){openItem(null)};
     $("iBack").onclick=closeAdm;
     $("iSave").onclick=function(){
         if(editPriv){var oc=editRef.cat,ot=editRef.title;editRef.title=$("i_title").value.trim()||"Untitled";editRef.meta=$("i_meta").value.trim();
+            if($("ialb").checked&&editKey)PR.gallery.forEach(function(x){if(x!==editRef&&groupKey(Object.assign({},x,{priv:true}))===editKey){x.title=editRef.title;x.meta=editRef.meta}});
             var lch=false,ln=C.gallery.length;C.gallery=C.gallery.filter(function(x){return!(x.locked&&lockKey(x.cat,x.title)===lockKey(oc,ot))});if(C.gallery.length!==ln)lch=true;
             if($("ilk").checked&&addLock(editRef))lch=true;if(lch)save();
             savePrivate().catch(function(e){alert(e.message)});load();closeAdm();return}
@@ -557,6 +559,7 @@
         if(!src||src==="photos/")return say("Enter the file path, for example photos/photo40.jpg.");
         var it={src:src,title:$("i_title").value.trim()||"Untitled",cat:cat,meta:$("i_meta").value.trim()};
         if(cat==="Videos"){it.type="video";it.poster=/^photos\//.test(src)?src.replace(/\.[^.\/]+$/,".jpg"):""}
+        if($("ialb").checked&&editKey)C.gallery.forEach(function(x){if(x!==editRef&&groupKey(x)===editKey){x.title=it.title;x.meta=it.meta}});
         var ix=editRef?C.gallery.indexOf(editRef):-1;
         if(ix<0)C.gallery.push(it);else C.gallery[ix]=it;
         save();load();closeAdm()};
