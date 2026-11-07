@@ -241,6 +241,7 @@
                 <label for="i_cat">Category</label><select id="i_cat"><option>Photography</option><option>Videos</option></select></div>
             <label for="i_title">Title</label><input id="i_title">
             <label for="i_meta">Date or note</label><input id="i_meta">
+            <label class="chk hidden" id="ilkw"><input type="checkbox" id="ilk"> Show a locked card to visitors (title only, no photos)</label>
             <div class="acts"><button class="btn fill" id="iSave" type="button">Save</button><button class="btn" id="iDel" type="button">Remove</button><button class="btn hidden" id="iDelAlb" type="button">Remove whole album</button><button class="btn" id="iBack" type="button">Back</button></div></div>
         <div class="msg" id="msg" role="status"></div>
     </div></div>
@@ -480,14 +481,17 @@
     function openItem(it){editPriv=!!(it&&it.priv);editRef=it?(editPriv?it.ref:it):null;
         var cur=editRef||{src:"photos/",cat:"Photography",title:"",meta:""};
         $("i_src").value=cur.src;$("i_cat").value=cur.cat;$("i_title").value=cur.title;$("i_meta").value=cur.meta||"";
-        $("fSrc").classList.toggle("hidden",editPriv);
+        $("fSrc").classList.toggle("hidden",editPriv);$("ilkw").classList.toggle("hidden",!editPriv);if(editPriv)$("ilk").checked=C.gallery.some(function(x){return x.locked&&lockKey(x.cat,x.title)===lockKey(cur.cat,cur.title)});
         $("iNote").textContent=editPriv?"This item is private. You can rename it or remove it.":"The file path is where the file sits in your GitHub repo, for example photos/photo40.jpg.";
         $("iTitleH").textContent=!editRef?"Add a file from your GitHub photos folder":(editPriv?"Edit private item":"Edit item");$("iDel").classList.toggle("hidden",!editRef);editKey=it?groupKey(it):null;var an=editKey?ITEMS.filter(function(x){return groupKey(x)===editKey}).length:0;$("iDelAlb").classList.toggle("hidden",an<2);$("iDelAlb").textContent="Remove whole album ("+an+")";
         lastF=document.activeElement;adm.classList.add("open");view("vItem")}
     $("bAddFile").onclick=function(){openItem(null)};
     $("iBack").onclick=closeAdm;
     $("iSave").onclick=function(){
-        if(editPriv){editRef.title=$("i_title").value.trim()||"Untitled";editRef.meta=$("i_meta").value.trim();savePrivate().catch(function(e){alert(e.message)});load();closeAdm();return}
+        if(editPriv){var oc=editRef.cat,ot=editRef.title;editRef.title=$("i_title").value.trim()||"Untitled";editRef.meta=$("i_meta").value.trim();
+            var lch=false,ln=C.gallery.length;C.gallery=C.gallery.filter(function(x){return!(x.locked&&lockKey(x.cat,x.title)===lockKey(oc,ot))});if(C.gallery.length!==ln)lch=true;
+            if($("ilk").checked&&addLock(editRef))lch=true;if(lch)save();
+            savePrivate().catch(function(e){alert(e.message)});load();closeAdm();return}
         var src=$("i_src").value.trim(),cat=$("i_cat").value;
         if(!src||src==="photos/")return say("Enter the file path, for example photos/photo40.jpg.");
         var it={src:src,title:$("i_title").value.trim()||"Untitled",cat:cat,meta:$("i_meta").value.trim()};
