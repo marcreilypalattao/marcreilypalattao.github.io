@@ -21,9 +21,11 @@
         nav{position:sticky;top:0;z-index:20;background:rgba(16,13,26,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
         nav .wrap{display:flex;justify-content:space-between;align-items:center;height:62px}
         nav b{font-family:Syne;font-size:1.05rem}
-        nav ul{list-style:none;display:flex;gap:4px}
+        nav ul{list-style:none;display:flex;gap:4px;align-items:center}
         nav a{display:block;padding:8px 12px;color:var(--mut);text-decoration:none;font-weight:500;border-radius:99px}
         nav a:hover{color:var(--ink);background:var(--s1)}
+        .lo{background:none;border:1px solid var(--line);color:var(--mut);font:inherit;font-weight:500;padding:7px 14px;border-radius:99px;cursor:pointer}
+        .lo:hover{color:var(--ink);background:var(--s1)}
         .hero{padding:56px 0 30px}
         .hero .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:30px;align-items:center}
         .hero h1{font-size:clamp(2.6rem,6.4vw,4.8rem);line-height:1;font-weight:800;letter-spacing:-.02em}
@@ -137,6 +139,7 @@
             .hero .wrap,.about,.contact{grid-template-columns:1fr}
             .stage{height:400px;order:-1}.scene{width:150px;height:205px}:root{--r:230px}
             nav ul a{padding:6px 8px;font-size:.85rem}nav b{display:none}
+            .lo{padding:5px 9px;font-size:.85rem}
         }
         @media(prefers-reduced-motion:reduce){.ring{animation:none}.card,.cert,.btn{transition:none}.role i{animation:none}html{scroll-behavior:auto}}
     </style>
@@ -151,7 +154,7 @@
     <div class="lnks"><button class="lnk" type="button" data-go="alogin">Admin login</button><button class="lnk hidden" id="gBack" type="button" data-go="login">Back to visitor login</button></div>
 </div></div>
 <nav><div class="wrap"><b id="nName">Russel Heinrich Sawyer</b>
-    <ul><li><a href="#home">Home</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div></nav>
+    <ul><li><a href="#home">Home</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li><li><button class="lo" id="logoutBtn" type="button">Log out</button></li></ul></div></nav>
 
 <main>
     <section class="hero" id="home"><div class="wrap">
@@ -446,7 +449,16 @@
         if(CLOUD){say("Logging in…",true);return sbAdminLogin(u,p).then(function(){setAdmin(true);document.getElementById("lp").value="";view("vPanel");sbLoadPrivate().then(load)}).catch(function(err){say(err.message)})}
         if(!a)return view("vSetup");
         hashPw(u,p,a.s).then(function(h){if(u.toLowerCase()===a.u&&h===a.h){setAdmin(true);document.getElementById("lp").value="";view("vPanel")}else say("Wrong username or password.")})};
-    document.getElementById("bOut").onclick=function(){if(CLOUD)sbSetSess(null);setAdmin(false);PR={gallery:[]};load();closeAdm()};
+
+    // ===== Log out (visitors and admin): clears access and returns to the login screen =====
+    function logout(){
+        try{sessionStorage.removeItem("folio2_gate");sessionStorage.removeItem("folio2_in");sessionStorage.setItem("folio2_lo","1")}catch(e){}
+        sbSetSess(null);
+        location.reload();
+    }
+    document.getElementById("bOut").onclick=logout;
+    document.getElementById("logoutBtn").onclick=logout;
+
     function shrink(file){return new Promise(function(res){
         var u=URL.createObjectURL(file),im=new Image();
         im.onload=function(){var m=1800,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
@@ -576,7 +588,8 @@
             if(!u)return say("Enter a username.");if(p.length<8)return say("Use a password with at least 8 characters.");if(p!==p2)return say("The two passwords don’t match.");
             var salt=Math.random().toString(36).slice(2)+Date.now().toString(36);
             hashPw(u,p,salt).then(function(h){try{localStorage.setItem("folio2_admin",JSON.stringify({u:u,s:salt,h:h}))}catch(x){}go("alogin","Admin created. Now log in as admin.")})};
-        go(viewers().length?"login":"signup")})();
+        var lo=false;try{lo=sessionStorage.getItem("folio2_lo")==="1";sessionStorage.removeItem("folio2_lo")}catch(e){}
+        go(lo||viewers().length?"login":"signup")})();
 </script>
 </body>
 </html>
