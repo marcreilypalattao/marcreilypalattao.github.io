@@ -214,7 +214,7 @@
 
 <footer>© 2026 <span id="fName">Russel Heinrich Sawyer</span><button id="admOpen" type="button">Admin</button></footer>
 
-<div id="lb" role="dialog" aria-modal="true" aria-label="Viewer"><div class="lbs"><button class="lbb" id="lbx" aria-label="Close">&times;</button><button class="lbb hidden" id="lbe" aria-label="Edit this item" style="top:0;right:56px">&#9998;</button><button class="lbb" id="lbp" aria-label="Previous">&#8249;</button><div id="lbm"></div><button class="lbb" id="lbn" aria-label="Next">&#8250;</button></div><div class="lbi"><h3 id="lbt"></h3><p id="lbd"></p></div></div>
+<div id="lb" role="dialog" aria-modal="true" aria-label="Viewer"><div class="lbs"><button class="lbb" id="lbx" aria-label="Close">&times;</button><button class="lbb" id="lbs" type="button" aria-label="Save this photo or video" title="Save" style="top:0;right:56px"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 21h14"/></svg></button><button class="lbb hidden" id="lbe" aria-label="Edit this item" style="top:0;right:112px">&#9998;</button><button class="lbb" id="lbp" aria-label="Previous">&#8249;</button><div id="lbm"></div><button class="lbb" id="lbn" aria-label="Next">&#8250;</button></div><div class="lbi"><h3 id="lbt"></h3><p id="lbd"></p></div></div>
 
 <div id="alb" role="dialog" aria-modal="true" aria-label="Album"><div class="albw"><div class="albh"><div><h3 id="albt"></h3><p id="albd"></p></div><button class="lbb" id="albx" type="button" aria-label="Close album" style="position:static;flex:none">&times;</button></div><div class="albg" id="albg"></div></div></div>
 
@@ -428,7 +428,7 @@
     // Lightbox
     var lb=document.getElementById("lb"),lbm=document.getElementById("lbm"),cur=0,lastF=null,navList=[];
     function vis(){var o=[];[].forEach.call(grid.querySelectorAll(".card"),function(s){if(!s.classList.contains("hide")&&!s.classList.contains("locked"))o.push(+s.dataset.first)});return o}
-    function showLb(i){cur=i;var it=ITEMS[i];lbm.innerHTML="";document.getElementById("lbp").classList.remove("hidden");document.getElementById("lbn").classList.remove("hidden");
+    function showLb(i){cur=i;var it=ITEMS[i];lbm.innerHTML="";document.getElementById("lbp").classList.remove("hidden");document.getElementById("lbn").classList.remove("hidden");document.getElementById("lbs").classList.remove("hidden");
         if(it.type==="video"){var v=document.createElement("video");v.src=it.local?it.url:it.src;v.controls=true;v.autoplay=true;v.playsInline=true;if(it.poster&&!it.local)v.poster=it.poster;lbm.appendChild(v)}
         else{var im=new Image();im.alt=it.title;im.src=it.local?it.url:it.src;lbm.appendChild(im)}
         document.getElementById("lbt").textContent=it.title;var gg=groupOf(i);
@@ -438,11 +438,20 @@
     function closeLb(){lb.classList.remove("open");lbm.innerHTML="";document.body.style.overflow=(albEl&&albEl.classList.contains("open"))?"hidden":"";if(lastF)lastF.focus()}
     function mv(d){var v=navList;if(v.length<2)return;var k=v.indexOf(cur);if(k<0)k=0;showLb(v[(k+d+v.length)%v.length])}
     function openLocked(it){navList=[];cur=-1;lastF=document.activeElement;lb.classList.add("open");document.body.style.overflow="hidden";
-        ["lbp","lbn","lbe"].forEach(function(id){document.getElementById(id).classList.add("hidden")});
+        ["lbp","lbn","lbe","lbs"].forEach(function(id){document.getElementById(id).classList.add("hidden")});
         lbm.innerHTML='<div style="text-align:center;padding:30px;max-width:380px"><svg viewBox="0 0 24 24" style="width:64px;height:64px;stroke:var(--teal);fill:none;stroke-width:1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><p style="margin-top:14px;font-size:1.1rem">This album is private.</p></div>';
         document.getElementById("lbt").textContent=it.title;document.getElementById("lbd").textContent="Private album";document.getElementById("lbx").focus()}
     document.getElementById("lbx").onclick=closeLb;document.getElementById("lbe").onclick=function(){var it=ITEMS[cur];if(!it||it.local)return;closeLb();openItem(it)};document.getElementById("lbp").onclick=function(){mv(-1)};document.getElementById("lbn").onclick=function(){mv(1)};
     lb.addEventListener("click",function(e){if(e.target===lb||e.target.classList.contains("lbs"))closeLb()});
+    // Save button: downloads the photo or video that is open
+    function saveCur(){var it=ITEMS[cur];if(!it||it.locked)return;var u=it.local?it.url:it.src;if(!u)return;var btn=document.getElementById("lbs");
+        function fin(blob){var t=blob.type||"",ext=(String(u).split("?")[0].match(/\.([a-z0-9]{2,4})$/i)||[])[1]||(t.indexOf("video")===0?"mp4":"jpg"),
+            nm=(String(it.title||"file").replace(/[\\\/:*?"<>|]+/g,"").trim()||"file")+"."+ext.toLowerCase(),a=document.createElement("a");
+            a.href=URL.createObjectURL(blob);a.download=nm;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)}
+        btn.disabled=true;
+        fetch(u).then(function(r){if(!r.ok)throw 0;return r.blob()}).then(fin).catch(function(){window.open(u,"_blank","noopener")}).then(function(){btn.disabled=false})}
+    document.getElementById("lbs").onclick=saveCur;
+
     // Album view: opening an album shows all its photos together; click one to view it large
     var albEl=document.getElementById("alb"),albList=[],albF=null;
     function openAlbum(g){albList=g;var it=ITEMS[g[0]];albF=document.activeElement;
